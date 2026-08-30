@@ -20,7 +20,7 @@ Do not borrow a tool name, model identifier, path, or agent from another runtime
 
 When the runtime mapping marks a route unsupported, stop before entering it.
 The first-release unsupported set is `autonomous-run`, `autopilot-full`,
-`autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`, `orchestrate`,
+`autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`,
 `session-pickup`, `shipping`, and `worktree-cleanup`. Their dependencies are recorded in the
 [portability table](../../references/runtime/skill-portability.md). Do not
 silently substitute a weaker workflow or report it as complete.

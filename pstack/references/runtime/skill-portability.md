@@ -56,10 +56,14 @@ contains an explicit Codex stop gate and is omitted from the Codex distribution.
 ## Unsupported Poteto Mode routes in the first Codex release
 
 `autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`, `eval`,
-`multi-phase-plan`, `orchestrate`, `session-pickup`, `shipping`, and `worktree-cleanup` depend on excluded Cursor
+`multi-phase-plan`, `session-pickup`, `shipping`, and `worktree-cleanup` depend on excluded Cursor
 loops, cloud agents, transcripts, sidebar state, or scripts. The Codex
 distribution replaces each with an explicit stop stub. `poteto-mode` stops before
 entering them and never reports their result as successful.
+
+`orchestrate` is supported through the `codex-local-session` profile. It ships
+only its Bun SQLite runtime and uses explicit worktrees, exact commit evidence,
+one integration writer, and conservative restart recovery.
 
 Packaged source may still contain excluded agents, automations, and utility files
 for Cursor. No Codex mapping, supported skill, or generated Codex playbook may

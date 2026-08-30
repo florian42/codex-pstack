@@ -74,6 +74,7 @@ function buildFileMap() {
   const unsupportedResources = new Map(
     config.unsupportedResources.map((entry) => [entry.path, entry.reason]),
   );
+  const runtimeResources = new Set(config.runtimeResources ?? []);
   const files = new Map();
 
   files.set(
@@ -94,7 +95,7 @@ function buildFileMap() {
     for (const sourcePath of walkFiles(skillRoot)) {
       const skillRelative = toPosix(relative(sourceSkills, sourcePath));
       const segments = skillRelative.split("/");
-      if (segments.includes("scripts")) continue;
+      if (segments.includes("scripts") && !runtimeResources.has(skillRelative)) continue;
       const unsupportedReason = unsupportedResources.get(skillRelative);
       if (unsupportedReason !== undefined) {
         files.set(

@@ -566,6 +566,10 @@ function validateBacktickedLocalReferences() {
 }
 
 function validateGeneratedDistribution() {
+  const parsed = readJson(buildConfigPath);
+  const runtimeResources = new Set(
+    (parsed?.value.runtimeResources ?? []).map((path) => `skills/${path}`),
+  );
   const result = spawnSync(
     process.execPath,
     [resolve(root, "scripts/generate-codex-pstack.mjs"), "--check"],
@@ -579,12 +583,46 @@ function validateGeneratedDistribution() {
       detail || "generated distribution check failed",
     );
   }
-  for (const forbidden of ["agents", "automations", "scripts", "codex-skills"]) {
+  for (const forbidden of ["agents", "automations", "codex-skills"]) {
     const matches = walkFiles(generatedRoot).filter((path) =>
       relative(generatedRoot, path).split(sep).includes(forbidden),
     );
     if (matches.length > 0) {
       fail(matches[0], 1, `${forbidden} must be absent from the installed Codex distribution`);
+    }
+  }
+  const generatedScripts = walkFiles(generatedRoot).filter((path) =>
+    relative(generatedRoot, path).split(sep).includes("scripts"),
+  );
+  for (const path of generatedScripts) {
+    const generatedPath = relative(generatedRoot, path).split(sep).join("/");
+    if (!runtimeResources.has(generatedPath)) {
+      fail(path, 1, "unlisted script must be absent from the installed Codex distribution");
+    }
+  }
+  for (const generatedPath of runtimeResources) {
+    const sourceRelative = generatedPath.replace(/^skills\//, "");
+    const sourcePath = resolve(skillsRoot, sourceRelative);
+    const installedPath = resolve(generatedRoot, generatedPath);
+    if (!existsSync(sourcePath)) {
+      fail(buildConfigPath, 1, `runtime resource does not exist: ${sourceRelative}`);
+      continue;
+    }
+    if (!existsSync(installedPath)) {
+      fail(generatedRoot, 1, `runtime resource is missing from the installed distribution: ${generatedPath}`);
+    }
+    if (/\.test\.[cm]?[jt]sx?$/.test(sourceRelative)) {
+      fail(buildConfigPath, 1, `runtime resource must not be a test: ${sourceRelative}`);
+    }
+    const text = readText(sourcePath);
+    if (text === null) continue;
+    const importPattern = /from\s+["'](\.[^"']+)["']/g;
+    for (const match of text.matchAll(importPattern)) {
+      const imported = resolve(dirname(sourcePath), match[1]);
+      const importedRelative = relative(skillsRoot, imported).split(sep).join("/");
+      if (!runtimeResources.has(`skills/${importedRelative}`)) {
+        fail(sourcePath, lineNumber(text, match.index), `runtime import is outside the packaged allowlist: ${match[1]}`);
+      }
     }
   }
   const sourceManifest = readText(codexManifestPath);

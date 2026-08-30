@@ -25,10 +25,6 @@
       "reason": "The workflow depends on excluded utilities and unsupported execution routes."
     },
     {
-      "path": "poteto-mode/playbooks/orchestrate.md",
-      "reason": "The workflow depends on unavailable cloud-agent and transcript primitives."
-    },
-    {
       "path": "poteto-mode/playbooks/session-pickup.md",
       "reason": "The workflow depends on unavailable transcript and sidebar state."
     },
@@ -40,6 +36,11 @@
       "path": "poteto-mode/playbooks/worktree-cleanup.md",
       "reason": "The workflow depends on unavailable agent and worktree bookkeeping."
     }
+  ],
+  "runtimeResources": [
+    "poteto-mode/scripts/orch/codex-orch.ts",
+    "poteto-mode/scripts/orch/journal.ts",
+    "poteto-mode/scripts/orch/program.ts"
   ],
   "platformTermAllowlist": []
 }

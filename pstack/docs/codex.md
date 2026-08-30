@@ -5,9 +5,10 @@ truth stays in [`../skills/`](../skills/); the repository generates a filtered,
 self-contained install tree at `.agents/plugins/pstack` because the Codex loader
 copies an entire marketplace source and has no package ignore mechanism.
 
-The generated package contains supported skills and the runtime contract. It
-does not contain Cursor agents, Benny automations, or the existing TypeScript
-and shell utilities. Unsupported skills are omitted, and unsupported Poteto
+The generated package contains supported skills, the runtime contract, and the
+three-file Bun runtime required by the Codex Orchestrate profile. It does not
+contain Cursor agents, Benny automations, or other TypeScript and shell
+utilities. Unsupported skills are omitted, and unsupported Poteto
 Mode routes are generated as explicit stop pages. Do not edit generated files.
 
 ## Install from GitHub
@@ -60,9 +61,12 @@ release has these limits:
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autonomous-run`, `autopilot-full`,
-  `autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`, `orchestrate`,
+  `autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`,
   `session-pickup`, `shipping`, or `worktree-cleanup`. It does not substitute a
   weaker workflow or report success.
+- Orchestrate supports a local-session profile with Bun, durable SQLite state,
+  explicit worktrees, exact commit evidence, and one integration writer. It
+  does not claim cloud workers, transcript recovery, or unattended continuation.
 
 ## Maintain the Codex package
 
@@ -119,7 +123,7 @@ surface, prompt, result, and evidence for each check:
 3. Ask it to propose and critique a bounded design.
 4. Ask it to implement a small change and verify the real result before claiming completion.
 5. Ask for one delegated or adversarial review and confirm its findings are synthesized.
-6. Confirm Cursor agents, Benny, and utility scripts are absent from the installed cache.
+6. Confirm Cursor agents, Benny, and unlisted utility scripts are absent from the installed cache.
 7. Invoke an unsupported route and confirm it stops explicitly instead of reporting success.
 
 For every upstream pstack sync, follow the evergreen [Codex maintenance

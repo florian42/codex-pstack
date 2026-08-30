@@ -1,0 +1,11 @@
+# Orchestrate runtime design
+
+Orchestrate has one shared playbook and separate runtime profiles. The shared layer owns briefs, legal program states, exact-revision verification, and single integration authority. A profile owns delegation, isolation, persistence, recovery, and delivery operations.
+
+The first Codex profile uses an append-only SQLite event journal with content-addressed artifacts. A pure reducer rejects illegal state transitions. SQLite transactions make event and artifact acceptance atomic, and stable event identities make uncertain retries idempotent. Restart recovery records outstanding dispatches as interrupted instead of claiming their workers survived.
+
+Code evidence is a full commit SHA that resolves in the program repository. Verification binds to that SHA. Pull request identity is optional metadata and is not part of the first implementation. Analysis workers use a shared checkout read-only. Code workers use explicit worktrees, with one active code dispatch and one integration writer. Integration is fast-forward only.
+
+The existing Cursor plain-file helper remains unchanged behind its runtime profile. The Codex distribution packages only `codex-orch.ts`, `journal.ts`, and `program.ts` from the canonical skill source. It excludes tests, dependency installers, Graphite support, transcript utilities, cloud coordination, and dormant automation material.
+
+This design was selected from two independent candidates. The SQLite domain and journal were the base. The explicit checkout tag, simple commands, fast-forward integration, and reducer-first tests were grafted from the other candidate. The first slice intentionally omits program close gates, PR automation, dashboards, background wake loops, and parallel code writers.
