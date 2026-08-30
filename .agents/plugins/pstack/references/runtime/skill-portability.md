@@ -43,7 +43,7 @@ contains an explicit Codex stop gate and is omitted from the Codex distribution.
 | `principle-type-system-discipline` | `portable` | Platform-neutral principle. |
 | `recall` | `unsupported` | Needs an explicitly authorized Codex task-history adapter. |
 | `reflect` | `adapted` | Active conversation, delegation, and skill authoring are mapped. |
-| `setup-pstack` | `unsupported` | Configures Cursor model rules; Codex model choice is task-scoped. |
+| `setup-pstack` | `unsupported` | Cursor `.mdc` model rules are ignored; Codex uses runtime-exposed task and delegation model controls. |
 | `show-me-your-work` | `adapted` | Active conversation and independent review are mapped. |
 | `swarm` | `adapted` | Delegation, isolation, monitoring, and model roles are mapped. |
 | `tdd` | `portable` | Repository tests and executable checks only. |

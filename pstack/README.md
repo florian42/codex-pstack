@@ -14,28 +14,48 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
-Cursor:
+### cursor
+
+install the plugin:
 
 ```bash
 /add-plugin pstack
 ```
 
-Codex: follow the [Codex installation and maintenance guide](./docs/codex.md).
+### codex
+
+follow the [Codex installation guide](./docs/codex.md#install-from-github).
 
 ## get started
+
+### cursor
 
 two steps:
 
 1. run [`/setup-pstack`](./skills/setup-pstack/SKILL.md) and choose which models you want.
 2. use [`/poteto-mode`](./skills/poteto-mode/SKILL.md) whenever you're doing anything that requires rigor.
 
-new here? the [pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
+new here? the [Cursor-focused pstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
 that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code goes to sol, fast mechanical code goes to grok, and prose and judgment go to fable. the default panel is fable / sol / grok / opus 5. [`/setup-pstack`](./skills/setup-pstack/SKILL.md) changes any of it.
 
+### codex
+
+open a repository you want to inspect, then start a fresh task after installation. invoke `pstack:poteto-mode` with a goal and a result it can check:
+
+```text
+pstack:poteto-mode investigate how this repository validates changes. Do not edit anything. Show the files, commands, and evidence behind the answer.
+```
+
+the [Codex quick start](./docs/codex.md#start-with-poteto-mode) has the full first-use path.
+
+this repository builds the Codex package from the same canonical skill source. it omits Cursor model rules, Cursor agents, Benny automations, and unsupported skills. unsupported Poteto Mode routes remain as explicit stop pages. see [Use pstack with Codex](./docs/codex.md#know-the-codex-boundary) for the compact boundary and [Active skill portability](./references/runtime/skill-portability.md) for the authoritative record.
+
 ## usage
 
-use [`/poteto-mode`](./skills/poteto-mode/SKILL.md) at the start of a task. it reads your request, picks from a set of playbooks, and runs the other skills as the steps need them.
+in Cursor, use [`/poteto-mode`](./skills/poteto-mode/SKILL.md) at the start of a task. in Codex, invoke `pstack:poteto-mode`. it reads your request, picks from a set of playbooks, and runs the other skills as the steps need them.
+
+the examples and complete skill catalog below describe the Cursor package. Codex users should use the [Codex guide](./docs/codex.md) and [portability record](./references/runtime/skill-portability.md) to check which skills and playbooks are available.
 
 ### just use [`/poteto-mode`](./skills/poteto-mode/SKILL.md)
 
@@ -187,7 +207,7 @@ automate-me:       /automate-me
 
 </details>
 
-## the `poteto-agent` and Comment Sicko subagents
+## Cursor subagents
 
 pstack also ships a subagent that runs my style end to end. spawn it from a parent agent via [`subagent_type: "poteto-agent"`](./agents/poteto-agent.md). it reads `poteto-mode` in full, including its inline principles index, before doing any work. substituting `generalPurpose` skips that read and drifts.
 
@@ -248,9 +268,9 @@ cursor already has a great plan mode which works great with pstack. but personal
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through pstack underneath. you keep pstack as the base and end up with your own routing skill alongside `poteto-mode`.
 
-models are configurable too. type [`/setup-pstack`](./skills/setup-pstack/SKILL.md). it detects the models you have access to and writes a small always-applied rule mapping each role (code, judgment, the review panels) to a model. every skill reads it and falls back to sensible defaults when the rule is absent, so you override only what you want.
+in Cursor, models are configurable too. type [`/setup-pstack`](./skills/setup-pstack/SKILL.md). it detects the models you have access to and writes a small always-applied rule mapping each role (code, judgment, the review panels) to a model. every skill reads it and falls back to sensible defaults when the rule is absent, so you override only what you want.
 
-## automations
+## Cursor automations
 
 pstack also ships a dormant [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. its files are not registered as slash skills.
 

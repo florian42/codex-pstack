@@ -19,9 +19,6 @@ codex plugin marketplace add florian42/codex-pstack --ref main
 codex plugin add pstack@codex-pstack
 ```
 
-Start a fresh Codex task after installation. Plugin skills are loaded at task
-startup, so an existing task is not a reliable installation test.
-
 To use an unpublished local checkout instead, pass its absolute repository path:
 
 ```bash
@@ -29,7 +26,50 @@ codex plugin marketplace add /absolute/path/to/codex-pstack
 codex plugin add pstack@codex-pstack
 ```
 
-## Refresh an installation
+## Start with Poteto Mode
+
+Follow these steps:
+
+1. Open a repository you want to inspect.
+2. Start a fresh Codex task after installation. Plugin skills load when a task
+   starts, so an existing task is not a reliable installation test.
+3. Invoke `pstack:poteto-mode`.
+4. State the goal and a result that Codex can check.
+
+For example:
+
+```text
+pstack:poteto-mode investigate how this repository validates changes. Do not edit anything. Show the files, commands, and evidence behind the answer.
+```
+
+This prompt uses the supported Investigation playbook. Poteto Mode tracks the
+playbook steps, uses the other supported skills when needed, and reports the
+evidence behind its conclusion.
+
+## Know the Codex boundary
+
+Codex packages the shared skills that have a supported Codex route. The first
+release has these limits:
+
+- Codex does not use `/setup-pstack`. Cursor `.mdc` model rules are ignored.
+  Codex uses the task and delegation model controls exposed by the runtime.
+- Codex does not package Cursor agents, including `poteto-agent` and Comment
+  Sicko. It also excludes Benny automations.
+- Codex omits five top-level skills: `automate-me`, `make-bot-ui`,
+  `no-comments`, `recall`, and `setup-pstack`. The [active skill portability
+  record](../references/runtime/skill-portability.md) lists each supported,
+  adapted, and omitted skill.
+- Poteto Mode stops before entering `autonomous-run`, `autopilot-full`,
+  `autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`, `orchestrate`,
+  `session-pickup`, `shipping`, or `worktree-cleanup`. It does not substitute a
+  weaker workflow or report success.
+
+## Maintain the Codex package
+
+The remaining commands are for maintainers who refresh, generate, validate, or
+smoke-test the Codex package.
+
+### Refresh an installation
 
 Refresh the Git marketplace snapshot, reinstall pstack, and start a fresh task:
 
@@ -46,7 +86,7 @@ node scripts/validate-codex-pstack.mjs
 codex plugin add pstack@codex-pstack
 ```
 
-## Validate a change
+### Generate and validate a change
 
 Run the standalone compatibility validator from the repository root:
 
@@ -63,7 +103,7 @@ exceptions. Failures include a file, line, and reason.
 If canonical skills or runtime references changed, regenerate first. CI checks
 that the committed distribution is byte-for-byte current.
 
-## Smoke test from a fresh task
+### Smoke test from a fresh task
 
 First confirm that the configured marketplace exposes the installed plugin:
 

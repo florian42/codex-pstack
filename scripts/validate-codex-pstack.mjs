@@ -31,6 +31,10 @@ const requiredRuntimeReferences = [
   "codex.md",
   "skill-portability.md",
 ].map((name) => resolve(pstackRoot, "references/runtime", name));
+const publicDocumentationFiles = [
+  resolve(pstackRoot, "README.md"),
+  ...walkFiles(resolve(pstackRoot, "docs")),
+].filter((path) => extname(path) === ".md");
 
 const errors = [];
 
@@ -493,7 +497,7 @@ function validateMarkdownLinks() {
   const markdownFiles = [
     ...walkFiles(skillsRoot),
     ...walkFiles(resolve(pstackRoot, "references/runtime")),
-    resolve(pstackRoot, "docs/codex.md"),
+    ...publicDocumentationFiles,
     ...walkFiles(generatedRoot),
   ].filter((path) => extname(path) === ".md");
   const linkPattern = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+["'][^)]*)?\)/g;
@@ -530,7 +534,7 @@ function validateBacktickedLocalReferences() {
   const markdownFiles = [
     ...walkFiles(skillsRoot),
     ...walkFiles(resolve(pstackRoot, "references/runtime")),
-    resolve(pstackRoot, "docs/codex.md"),
+    ...publicDocumentationFiles,
     ...walkFiles(generatedRoot),
   ].filter((path) => extname(path) === ".md");
   const referencePattern = /`((?:\.\.\/|\.\/|references\/|playbooks\/|templates\/|skills\/|pstack\/)[^`\s<>]*(?:\.md|\.json))`/g;
