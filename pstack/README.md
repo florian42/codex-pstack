@@ -14,9 +14,13 @@ fork it. improve it. make it yours. PRs are welcome!
 
 ## install
 
+Cursor:
+
 ```bash
 /add-plugin pstack
 ```
+
+Codex: follow the [Codex installation and maintenance guide](./docs/codex.md).
 
 ## get started
 

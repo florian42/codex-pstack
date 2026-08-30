@@ -1,0 +1,38 @@
+{
+  "name": "pstack",
+  "version": "0.14.5",
+  "description": "Rigorous engineering workflows for understanding, designing, implementing, reviewing, and verifying software with agents.",
+  "author": {
+    "name": "Lauren Tan",
+    "url": "https://github.com/poteto"
+  },
+  "homepage": "https://github.com/florian42/codex-pstack/tree/main/pstack",
+  "repository": "https://github.com/florian42/codex-pstack",
+  "license": "MIT",
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "engineering-workflows",
+    "subagents",
+    "verification"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "pstack",
+    "shortDescription": "Rigorous engineering workflows for Codex",
+    "longDescription": "Use shared pstack skills to understand, design, build, review, and verify software without duplicating the Cursor skill tree.",
+    "developerName": "Lauren Tan",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Skills",
+      "Subagents",
+      "Software engineering"
+    ],
+    "websiteURL": "https://github.com/florian42/codex-pstack/tree/main/pstack",
+    "defaultPrompt": [
+      "Use pstack to investigate this issue before changing code.",
+      "Use poteto-mode to design, implement, and verify this task.",
+      "Adversarially review this change, then verify the accepted fixes."
+    ]
+  }
+}

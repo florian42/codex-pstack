@@ -6,6 +6,14 @@ disable-model-invocation: true
 
 # No comments
 
+## Runtime gate
+
+Read the [runtime contract](../../references/runtime/contract.md). This workflow
+is unsupported on Codex because Comment Sicko is an excluded Cursor agent. On
+Codex, stop before reviewing or editing and report that `/no-comments` did not
+run. Do not replace its rules with a generic reviewer and do not claim a comment
+audit passed. The portability record names the follow-up.
+
 Spawn Comment Sicko. Act on accepted findings.
 
 Authoring agents defend comments. Defer to Comment Sicko's fresh perspective.

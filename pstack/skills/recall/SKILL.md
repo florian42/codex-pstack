@@ -6,6 +6,14 @@ disable-model-invocation: true
 
 # Recall
 
+## Runtime gate
+
+This workflow is unsupported on Codex in the first release because its source is
+Cursor workspace transcripts. On Codex, stop before searching any history and
+state that recall did not run. Do not guess a transcript path or read another
+task's history. The follow-up is recorded in
+[`../../references/runtime/skill-portability.md`](../../references/runtime/skill-portability.md).
+
 **Before you start or resume work, you rebuild the user's recent working context and hand back a tight capsule of where things stand now and what to do next.** Use for "recall my work on X", "catch me up", "what have I been working on", or "where did I leave off".
 
 Keep it tight and on-topic. Read only what the in-scope threads need, then stop. The heavy reading fans out to parallel subagents. The main thread keeps only their findings and the final brief.

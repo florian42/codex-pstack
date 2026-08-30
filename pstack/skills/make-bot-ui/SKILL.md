@@ -7,6 +7,16 @@ description: >-
 ---
 # How to make a bot UI
 
+## Runtime gate
+
+This workflow is unsupported on Codex. It requires Cursor routines,
+`update_state`, secret-request cards, and Cursor webhook semantics. On Codex,
+stop before creating files, routines, credentials, or network listeners. Tell
+the user that no routine was created and point to
+[`../../references/runtime/skill-portability.md`](../../references/runtime/skill-portability.md).
+Do not substitute a Codex automation because it does not provide this secret
+handoff or webhook contract.
+
 Build a page the user clicks. A server on this computer POSTs JSON to a webhook routine. The bot wakes with that JSON. Keep the sender key on the server. Do not put the sender key in the browser, in chat, or in this skill.
 
 ## Create the webhook routine

@@ -6,6 +6,14 @@ disable-model-invocation: true
 
 # Automate me
 
+## Runtime gate
+
+This workflow is unsupported on Codex in the first release because it mines
+Cursor transcripts and writes a Cursor personal mode skill. On Codex, stop
+before transcript access or file creation and say that no skill was created.
+Do not guess a history source or destination. The follow-up is recorded in
+[`../../references/runtime/skill-portability.md`](../../references/runtime/skill-portability.md).
+
 A guided flow for turning the user's working conventions into a skill agents will follow. The output is one `-mode` skill tailored to them (e.g. `jay-mode`, `priya-mode`).
 
 This skill orchestrates three others: an inline mining pass (see step 1), Cursor's built-in `create-skill` (authoring), and the **unslop** skill (prose discipline). It sequences them; it doesn't replace them.

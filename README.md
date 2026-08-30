@@ -88,6 +88,11 @@ plugins/
 └── ...
 ```
 
+## Codex pstack
+
+This fork also packages pstack for Codex from the same canonical skill tree.
+See the [Codex installation, validation, and maintenance guide](pstack/docs/codex.md).
+
 ## License
 
 MIT

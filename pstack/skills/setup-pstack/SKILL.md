@@ -5,6 +5,13 @@ description: Configure which models pstack uses per role. Detects your available
 
 # Setup pstack
 
+## Runtime gate
+
+This skill configures Cursor only. On Codex, stop without writing any file and
+explain that Codex model roles are selected per task through the
+[Codex runtime mapping](../../references/runtime/codex.md). Do not create a
+Cursor rule, translate model slugs, or report pstack models as configured.
+
 Write `~/.cursor/rules/pstack-models.mdc`, an always-applied rule that sets pstack's model per role. The skills read it and fall back to their inline defaults when a line is absent, so this is an override layer, not a requirement.
 
 ## Steps

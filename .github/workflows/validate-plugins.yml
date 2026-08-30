@@ -4,8 +4,15 @@ on:
   pull_request:
     paths:
       - ".cursor-plugin/marketplace.json"
+      - ".agents/plugins/**"
       - "**/plugin.json"
+      - "pstack/references/runtime/**"
+      - "pstack/skills/**"
+      - "pstack/docs/codex.md"
+      - "pstack/LICENSE"
       - "schemas/**"
+      - "scripts/generate-codex-pstack.mjs"
+      - "scripts/validate-codex-pstack.mjs"
 
 jobs:
   validate:
@@ -16,6 +23,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Validate Codex pstack compatibility
+        run: node scripts/validate-codex-pstack.mjs
 
       - name: Install dependencies
         run: npm install --no-save ajv ajv-formats
