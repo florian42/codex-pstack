@@ -25,4 +25,8 @@ Apply the **type-system-discipline** principle skill first; this skill grounds i
 | Real tests | Don't mock what you can run. Prefer the framework's real test primitives with leak/disposable checks, and verify UI in a running build. Mock only what you can't run locally. |
 | Structured telemetry | Prefer structured logger diagnostics with enough context to debug from an id. No `console.log` in shipped code. |
 
+## Exported schema declarations
+
+When an exported Zod schema is assembled from nested object, union, or intersection expressions, name and type the reusable shapes before composing the public schema. Tie fields to child schemas with `typeof ChildSchema` or the appropriate Zod wrapper instead of restating their inferred value types. After changing a published schema, inspect the emitted `.d.ts`, not only the source typecheck. The declaration should expose stable named shapes instead of recursively expanding a large anonymous type.
+
 Examples: `references/patterns.md`.
