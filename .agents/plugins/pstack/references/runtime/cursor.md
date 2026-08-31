@@ -6,6 +6,7 @@ belong here or in a deliberately Cursor-only skill, not in shared workflow prose
 | Capability | Cursor mapping |
 |---|---|
 | Delegate independent work | Use the `Task` tool. Use `generalPurpose` unless a routed skill explicitly names another shipped agent. `run_in_background: true` is the default. Use `readonly: true` only when the worker does not need MCP access. Cloud workers use `environment: "cloud"`; local-only work uses `environment: "local"`. |
+| Delegate an independent policy reviewer | For the `comment-sicko` policy, use the existing `Comment Sicko` agent with `Task(subagent_type: "Comment Sicko")`. Pass only the requested scope and wait for that exact worker. Its report is `completed`; spawn or wait failure is `blocked`. |
 | Ask a blocking question | Use `AskQuestion` when it is available. A plain concise user question is the fallback. |
 | Track a plan | Use Cursor's todo list. Preserve every required playbook step and mark a skipped step with its reason. |
 | Create or update a skill | Use Cursor's built-in `create-skill` capability. Project skills live under `.cursor/skills/`; personal skills live under `~/.cursor/skills/`. |

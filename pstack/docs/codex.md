@@ -5,10 +5,11 @@ truth stays in [`../skills/`](../skills/); the repository generates a filtered,
 self-contained install tree at `.agents/plugins/pstack` because the Codex loader
 copies an entire marketplace source and has no package ignore mechanism.
 
-The generated package contains supported skills, the runtime contract, and the
-three-file Bun runtime required by the Codex Orchestrate profile. It does not
-contain Cursor agents, Benny automations, or other TypeScript and shell
-utilities. Unsupported skills are omitted, and unsupported Poteto
+The generated package contains supported skills, the runtime contract, the
+three-file Bun runtime required by the Codex Orchestrate profile, and the
+`show-me-your-work` logging helper. It registers no Cursor agents or Benny
+automations, and excludes other TypeScript and shell utilities. Unsupported
+skills are omitted, and unsupported Poteto
 Mode routes are generated as explicit stop pages. Do not edit generated files.
 
 ## Install from GitHub
@@ -54,10 +55,13 @@ release has these limits:
 
 - Codex does not use `/setup-pstack`. Cursor `.mdc` model rules are ignored.
   Codex uses the task and delegation model controls exposed by the runtime.
-- Codex does not package Cursor agents, including `poteto-agent` and Comment
-  Sicko. It also excludes Benny automations.
-- Codex omits five top-level skills: `automate-me`, `make-bot-ui`,
-  `no-comments`, `recall`, and `setup-pstack`. The [active skill portability
+- Codex does not register Cursor agents, including `poteto-agent` and Comment
+  Sicko, and excludes Benny automations. `no-comments` instead packages an
+  inert, byte-identical Comment Sicko reference and delegates one independent,
+  scoped comment-only reviewer through the runtime mapping. The parent validates
+  that worker's diff before accepting it.
+- Codex omits four top-level skills: `automate-me`, `make-bot-ui`, `recall`,
+  and `setup-pstack`. The [active skill portability
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autonomous-run`, `autopilot-full`,
@@ -122,7 +126,10 @@ surface, prompt, result, and evidence for each check:
 2. Ask Poteto Mode to investigate a small repository question without editing.
 3. Ask it to propose and critique a bounded design.
 4. Ask it to implement a small change and verify the real result before claiming completion.
-5. Ask for one delegated or adversarial review and confirm its findings are synthesized.
+5. Run `pstack:no-comments` on a small fixture with a removable narration
+   comment and a protected public API doc comment. Confirm a fresh independent
+   reviewer makes only the scoped comment edit, returns its report and diff,
+   and the parent validates that diff before accepting it.
 6. Confirm Cursor agents, Benny, and unlisted utility scripts are absent from the installed cache.
 7. Invoke an unsupported route and confirm it stops explicitly instead of reporting success.
 

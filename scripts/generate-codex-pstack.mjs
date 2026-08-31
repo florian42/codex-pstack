@@ -6,6 +6,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { createHash } from "node:crypto";
@@ -32,6 +33,9 @@ function toPosix(path) {
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
+
+const buildConfig = readJson(configPath);
+const packagedRuntimeResources = new Set(buildConfig.runtimeResources ?? []);
 
 function parsePortability() {
   const records = new Map();
@@ -68,8 +72,73 @@ function codexSkillContents(sourcePath, skillRoot, skillName) {
   return Buffer.from(text.replace(/^name:.*$/m, `name: ${skillName}`));
 }
 
+function isWithin(parent, candidate) {
+  const path = relative(parent, candidate);
+  return path !== "" && !path.startsWith(`..${sep}`) && path !== ".." && !path.startsWith("../");
+}
+
+function copiedSkillResources(config) {
+  const resources = config.copiedSkillResources;
+  if (!Array.isArray(resources)) {
+    throw new Error("copiedSkillResources must be an array");
+  }
+  const destinations = new Set();
+  return resources.map((resource, index) => {
+    const prefix = `copiedSkillResources[${index}]`;
+    if (resource === null || Array.isArray(resource) || typeof resource !== "object") {
+      throw new Error(`${prefix} must be an object`);
+    }
+    const keys = Object.keys(resource).sort();
+    if (keys.length !== 2 || keys[0] !== "destination" || keys[1] !== "source") {
+      throw new Error(`${prefix} must contain only source and destination`);
+    }
+    if (typeof resource.source !== "string" || resource.source.trim() === "") {
+      throw new Error(`${prefix}.source must be a non-empty string`);
+    }
+    if (typeof resource.destination !== "string" || resource.destination.trim() === "") {
+      throw new Error(`${prefix}.destination must be a non-empty string`);
+    }
+
+    const sourcePath = resolve(sourceRoot, resource.source);
+    const destinationPath = resolve(outputRoot, resource.destination);
+    const normalizedSource = toPosix(relative(sourceRoot, sourcePath));
+    const normalizedDestination = toPosix(relative(outputRoot, destinationPath));
+    const destinationSegments = normalizedDestination.split("/");
+    if (!isWithin(sourceRoot, sourcePath) || normalizedSource !== resource.source) {
+      throw new Error(`${prefix}.source must be a normalized path beneath pstack/`);
+    }
+    if (!isWithin(outputRoot, destinationPath) || normalizedDestination !== resource.destination) {
+      throw new Error(`${prefix}.destination must be a normalized path beneath the generated package`);
+    }
+    if (
+      destinationSegments.length < 4 ||
+      destinationSegments[0] !== "skills" ||
+      destinationSegments[2] !== "references"
+    ) {
+      throw new Error(`${prefix}.destination must be beneath skills/*/references/`);
+    }
+    if (destinations.has(normalizedDestination)) {
+      throw new Error(`${prefix}.destination duplicates ${normalizedDestination}`);
+    }
+    if (!existsSync(sourcePath)) {
+      throw new Error(`${prefix}.source does not exist: ${resource.source}`);
+    }
+    destinations.add(normalizedDestination);
+    return { sourcePath, destination: normalizedDestination };
+  });
+}
+
+function addCopiedSkillResources(files, resources) {
+  for (const resource of resources) {
+    if (files.has(resource.destination)) {
+      throw new Error(`copied skill resource collides with generated file ${resource.destination}`);
+    }
+    files.set(resource.destination, readFileSync(resource.sourcePath));
+  }
+}
+
 function buildFileMap() {
-  const config = readJson(configPath);
+  const config = buildConfig;
   const portability = parsePortability();
   const unsupportedResources = new Map(
     config.unsupportedResources.map((entry) => [entry.path, entry.reason]),
@@ -113,6 +182,8 @@ function buildFileMap() {
     }
   }
 
+  addCopiedSkillResources(files, copiedSkillResources(config));
+
   const hash = createHash("sha256");
   for (const [path, contents] of [...files].sort(([left], [right]) => left.localeCompare(right))) {
     hash.update(path);
@@ -137,6 +208,13 @@ function buildFileMap() {
   return files;
 }
 
+function generatedFileMode(path) {
+  if (!path.startsWith("skills/")) return null;
+  const skillRelative = path.slice("skills/".length);
+  if (!packagedRuntimeResources.has(skillRelative)) return null;
+  return statSync(resolve(sourceSkills, skillRelative)).mode & 0o777;
+}
+
 function compare(expected) {
   const actualPaths = walkFiles(outputRoot)
     .map((path) => toPosix(relative(outputRoot, path)))
@@ -148,6 +226,11 @@ function compare(expected) {
     if (!existsSync(outputPath)) failures.push(`missing generated file ${path}`);
     else if (!readFileSync(outputPath).equals(expected.get(path))) {
       failures.push(`stale generated file ${path}`);
+    } else {
+      const expectedMode = generatedFileMode(path);
+      if (expectedMode !== null && (statSync(outputPath).mode & 0o777) !== expectedMode) {
+        failures.push(`stale generated file mode ${path}`);
+      }
     }
   }
   for (const path of actualPaths) {
@@ -172,6 +255,7 @@ rmSync(outputRoot, { recursive: true, force: true });
 for (const [path, contents] of expected) {
   const outputPath = resolve(outputRoot, path);
   mkdirSync(dirname(outputPath), { recursive: true });
-  writeFileSync(outputPath, contents);
+  const mode = generatedFileMode(path);
+  writeFileSync(outputPath, contents, mode === null ? undefined : { mode });
 }
 console.log(`Generated ${expected.size} files in ${toPosix(relative(root, outputRoot))}.`);

@@ -18,7 +18,7 @@ contains an explicit Codex stop gate and is omitted from the Codex distribution.
 | `interrogate` | `adapted` | Independent reviewers and model roles are mapped. |
 | `maintain-verification-skill` | `adapted` | Skill location, delegation, and live driving are mapped. |
 | `make-bot-ui` | `unsupported` | Needs Cursor routines, secret cards, and webhook semantics. |
-| `no-comments` | `unsupported` | Needs the excluded Comment Sicko agent. |
+| `no-comments` | `adapted` | Uses independent policy-review delegation with an inert packaged Comment Sicko reference. |
 | `poteto-mode` | `adapted` | Runtime capabilities and unsupported routes are gated. |
 | `principle-boundary-discipline` | `portable` | Platform-neutral principle. |
 | `principle-build-the-lever` | `portable` | Platform-neutral principle. |

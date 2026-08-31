@@ -6,6 +6,7 @@ on:
       - ".cursor-plugin/marketplace.json"
       - ".agents/plugins/**"
       - "**/plugin.json"
+      - "pstack/agents/**"
       - "pstack/references/runtime/**"
       - "pstack/skills/**"
       - "pstack/README.md"

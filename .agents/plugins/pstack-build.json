@@ -40,7 +40,14 @@
   "runtimeResources": [
     "poteto-mode/scripts/orch/codex-orch.ts",
     "poteto-mode/scripts/orch/journal.ts",
-    "poteto-mode/scripts/orch/program.ts"
+    "poteto-mode/scripts/orch/program.ts",
+    "show-me-your-work/scripts/log.sh"
+  ],
+  "copiedSkillResources": [
+    {
+      "source": "agents/comment-sicko.md",
+      "destination": "skills/no-comments/references/comment-sicko.md"
+    }
   ],
   "platformTermAllowlist": []
 }

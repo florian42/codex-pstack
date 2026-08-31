@@ -610,6 +610,10 @@ function validateGeneratedDistribution() {
     }
     if (!existsSync(installedPath)) {
       fail(generatedRoot, 1, `runtime resource is missing from the installed distribution: ${generatedPath}`);
+    } else if (
+      (statSync(installedPath).mode & 0o777) !== (statSync(sourcePath).mode & 0o777)
+    ) {
+      fail(installedPath, 1, `runtime resource must preserve its source file mode: ${generatedPath}`);
     }
     if (/\.test\.[cm]?[jt]sx?$/.test(sourceRelative)) {
       fail(buildConfigPath, 1, `runtime resource must not be a test: ${sourceRelative}`);
@@ -630,6 +634,75 @@ function validateGeneratedDistribution() {
   const generatedManifest = readText(generatedManifestPath);
   if (sourceManifest !== null && generatedManifest !== null && sourceManifest !== generatedManifest) {
     fail(generatedManifestPath, 1, "generated manifest differs from pstack/.codex-plugin/plugin.json");
+  }
+}
+
+function validateCopiedSkillResources() {
+  const parsed = readJson(buildConfigPath);
+  if (parsed === null) return;
+  const resources = parsed.value.copiedSkillResources;
+  if (!Array.isArray(resources)) {
+    fail(buildConfigPath, 1, "copiedSkillResources must be an array");
+    return;
+  }
+  const expected = {
+    source: "agents/comment-sicko.md",
+    destination: "skills/no-comments/references/comment-sicko.md",
+  };
+  if (resources.length !== 1) {
+    fail(buildConfigPath, lineOf(parsed.text, '"copiedSkillResources"'), "copiedSkillResources must contain exactly the Comment Sicko mapping");
+    return;
+  }
+  const [resource] = resources;
+  if (resource === null || Array.isArray(resource) || typeof resource !== "object") {
+    fail(buildConfigPath, lineOf(parsed.text, '"copiedSkillResources"'), "copiedSkillResources entry must be an object");
+    return;
+  }
+  rejectUnknownKeys(resource, new Set(["source", "destination"]), buildConfigPath, parsed.text, "copiedSkillResources entry.");
+  if (resource.source !== expected.source || resource.destination !== expected.destination) {
+    fail(buildConfigPath, lineOf(parsed.text, '"copiedSkillResources"'), "copiedSkillResources must map agents/comment-sicko.md to skills/no-comments/references/comment-sicko.md");
+    return;
+  }
+  const sourcePath = resolve(pstackRoot, resource.source);
+  const generatedPath = resolve(generatedRoot, resource.destination);
+  const sourceRelative = relative(pstackRoot, sourcePath).split(sep).join("/");
+  const generatedRelative = relative(generatedRoot, generatedPath).split(sep).join("/");
+  if (sourceRelative !== resource.source || sourceRelative.startsWith("../")) {
+    fail(buildConfigPath, lineOf(parsed.text, '"source"'), "copiedSkillResources source must be a normalized path beneath pstack/");
+  }
+  if (generatedRelative !== resource.destination || generatedRelative.startsWith("../")) {
+    fail(buildConfigPath, lineOf(parsed.text, '"destination"'), "copiedSkillResources destination must be a normalized generated path");
+  }
+  if (!existsSync(sourcePath)) {
+    fail(buildConfigPath, lineOf(parsed.text, '"source"'), "Comment Sicko canonical source is missing");
+  }
+  if (!existsSync(generatedPath)) {
+    fail(generatedPath, 1, "packaged Comment Sicko reference is missing");
+  } else if (existsSync(sourcePath) && !readFileSync(sourcePath).equals(readFileSync(generatedPath))) {
+    fail(generatedPath, 1, "packaged Comment Sicko reference must be byte-identical to pstack/agents/comment-sicko.md");
+  }
+}
+
+function validateCommentReviewerContract() {
+  const canonicalPath = resolve(pstackRoot, "agents/comment-sicko.md");
+  const editableRoots = [resolve(pstackRoot, "agents"), skillsRoot];
+  for (const editableRoot of editableRoots) {
+    for (const path of walkFiles(editableRoot).filter((candidate) => candidate.endsWith(".md"))) {
+      if (path === canonicalPath) continue;
+      const text = readText(path);
+      if (text === null) continue;
+      if (path.endsWith(`${sep}comment-sicko.md`) || /^name:\s*Comment Sicko\s*$/m.test(text)) {
+        fail(path, 1, "Comment Sicko must have exactly one editable definition at pstack/agents/comment-sicko.md");
+      }
+    }
+  }
+
+  const generatedNoComments = resolve(generatedRoot, "skills/no-comments/SKILL.md");
+  const text = readText(generatedNoComments);
+  if (text !== null) {
+    for (const match of text.matchAll(/\bTask\b|\bsubagent_type\b/g)) {
+      fail(generatedNoComments, lineNumber(text, match.index), `Cursor delegation term ${JSON.stringify(match[0])} must not leak into generated Codex skill instructions`);
+    }
   }
 }
 
@@ -678,7 +751,6 @@ function validateSupportedPlaybookRuntimeContract() {
     ["Cursor-only model slug", /\bgpt-5\.6-sol-max\b/g],
     ["destructive checkout recovery", /\bgit reset --hard\b/g],
     ["unsupported cleanup command", /`?\/deslop`?/g],
-    ["unsupported comment-review command", /`?\/no-comments`?/g],
   ];
 
   for (const path of walkFiles(playbooksRoot).filter((candidate) => extname(candidate) === ".md")) {
@@ -707,6 +779,8 @@ function validateSupportedPlaybookRuntimeContract() {
 
 validateCodexManifest();
 validateGeneratedDistribution();
+validateCopiedSkillResources();
+validateCommentReviewerContract();
 validateMarketplace();
 const portability = validateSkillsAndPortability();
 validateGeneratedSkillNames();
