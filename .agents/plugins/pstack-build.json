@@ -73,7 +73,7 @@
     }
   ],
   "runtimeResources": [
-    "poteto-mode/scripts/orch/codex-orch.ts",
+    "poteto-mode/scripts/orch/session-orch.ts",
     "poteto-mode/scripts/orch/journal.ts",
     "poteto-mode/scripts/orch/program.ts",
     "show-me-your-work/scripts/log.sh"

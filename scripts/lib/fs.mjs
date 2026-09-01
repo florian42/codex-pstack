@@ -9,7 +9,10 @@ export function walkFiles(path) {
   const files = [];
   for (const entry of readdirSync(path, { withFileTypes: true })) {
     const entryPath = resolve(path, entry.name);
-    if (entry.isDirectory()) files.push(...walkFiles(entryPath));
+    if (entry.isDirectory()) {
+      if (entry.name === "node_modules") continue;
+      files.push(...walkFiles(entryPath));
+    }
     else if (entry.isFile()) files.push(entryPath);
   }
   return files;

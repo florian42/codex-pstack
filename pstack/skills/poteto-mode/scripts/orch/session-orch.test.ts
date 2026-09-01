@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-const SCRIPT = process.env.CODEX_ORCH_SCRIPT ?? join(import.meta.dir, "codex-orch.ts");
+const SCRIPT = process.env.ORCH_SCRIPT ?? join(import.meta.dir, "session-orch.ts");
 const directories: string[] = [];
 
 function git(repo: string, ...args: readonly string[]): string {
@@ -13,7 +13,7 @@ function git(repo: string, ...args: readonly string[]): string {
 }
 
 async function repository(): Promise<{ readonly root: string; readonly repo: string }> {
-  const root = await mkdtemp(join(tmpdir(), "codex-orch-cli-"));
+  const root = await mkdtemp(join(tmpdir(), "session-orch-cli-"));
   directories.push(root);
   const repo = join(root, "repo");
   await mkdir(repo);

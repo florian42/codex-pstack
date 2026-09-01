@@ -17,12 +17,12 @@ Subagents share a checkout unless the coordinator creates an explicit worktree. 
 
 ## Runtime
 
-The installed entry point is `skills/poteto-mode/scripts/orch/codex-orch.ts`. Set `ORCH` to its absolute path. Keep the store outside the repository checkout when possible.
+The installed entry point is `skills/poteto-mode/scripts/orch/session-orch.ts`. Set `ORCH` to its absolute path. Keep the store outside the repository checkout when possible.
 
 ```bash
 command -v bun
 bun --version
-ORCH=/absolute/plugin/path/skills/poteto-mode/scripts/orch/codex-orch.ts
+ORCH=/absolute/plugin/path/skills/poteto-mode/scripts/orch/session-orch.ts
 STORE=/absolute/durable/path/program.sqlite
 ```
 
