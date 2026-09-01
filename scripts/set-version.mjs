@@ -62,6 +62,7 @@ function main(argv) {
   }
   console.log(`Set version ${version} in ${changed.length} manifest(s):`);
   for (const line of changed) console.log(`  ${line}`);
+  console.log("Regenerate every distribution and commit the result: node scripts/generate-plugin.mjs --target codex && node scripts/generate-plugin.mjs --target claude-code");
   return 0;
 }
 

@@ -752,6 +752,9 @@ function validateTarget(target) {
         fail(buildConfigPath, 1, "unsupported resource path must be a string");
         continue;
       }
+      if (!existsSync(resolve(skillsRoot, resource.path))) {
+        fail(buildConfigPath, 1, `unsupported resource does not exist: ${resource.path}`);
+      }
       const route = resource.path.split("/").at(-1)?.replace(/\.md$/, "");
       if (route === undefined) continue;
       if (!mapping.includes(`\`${route}\``)) {

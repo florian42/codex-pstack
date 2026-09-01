@@ -50,7 +50,7 @@ Add Claude Code as a third runtime target of the same canonical skill tree.
 5. As a Claude Code user, I want the four skills with no Claude Code route omitted from the installed plugin, so that I am not offered `setup-pstack`, `make-bot-ui`, `recall`, or `automate-me` when they cannot work.
 6. As a Claude Code user, I want `/pstack:no-comments` to delegate to a registered `comment-sicko` agent, so that the policy review is performed by the exact independent reviewer the canonical policy describes.
 7. As a Claude Code user, I want the `comment-sicko` agent restricted to read tools, so that a plugin-shipped reviewer cannot edit application code even though plugin agents ignore permission modes.
-8. As a Claude Code user, I want `poteto-agent` registered as a plugin agent, so that `/poteto-mode` has a resumable routing target rather than a sibling spawn.
+8. As a Claude Code user, I want `poteto-agent` registered as a plugin agent for bounded subtasks in poteto's style, while the parent session applies `/pstack:poteto-mode` itself, so that a headless session never hands its whole task to a background agent and ends the turn. (Revised after smoke runs showed the routing-target description caused exactly that.)
 9. As a Claude Code user, I want Orchestrate to run with the Bun runtime, so that a standing multi-unit program has durable SQLite state and exact commit evidence on Claude Code.
 10. As a Claude Code user, I want Orchestrate on Claude Code to dispatch several code units concurrently in isolated worktrees, so that I benefit from Claude Code's native worktree isolation rather than inheriting the Codex one-at-a-time limit.
 11. As a Claude Code user, I want `autonomous-run` supported, so that a long task can be driven to a checkable predicate with `/loop`.
@@ -151,4 +151,4 @@ No new seam is introduced. The generator is never tested directly; its correctne
 
 - Verified on the current CLI in this environment: the canonical tree wrapped in a minimal manifest passes strict validation; the two agents register from the default directory; `/pstack:poteto-mode` invoked headlessly detects the missing mapping and falls back correctly; `claude plugin eval` is gated by early access; the validate subcommand offers `--strict` but not `--json`.
 - The Claude Code marketplace name must not collide with reserved names; a name such as `pstack-claude` is acceptable.
-- Only two tickets touch upstream-owned canonical files: the route-list move and the `watch-pr` prefactor. Both are recorded in the maintenance contract.
+- Canonical files touched are wider than first planned: the route-list move, the `watch-pr` and worktree-audit prefactors, the Orchestrate runtime rename and profile, one phrase in `poteto-agent`, and single-phrase rewordings in five playbooks so supported routes pass the cursor-exclusive scan. The Claude Code guide lists them for the maintenance contract.

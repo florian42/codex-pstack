@@ -2,9 +2,11 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/florian42/codex-pstack/schemas/claude-plugin/plugin.json",
   "title": "Claude Code Plugin Manifest",
-  "description": "Schema for .claude-plugin/plugin.json — permissive to the fields Claude Code documents, strict about unknown keys so a typo fails validation.",
+  "description": "Schema for .claude-plugin/plugin.json \u2014 permissive to the fields Claude Code documents, strict about unknown keys so a typo fails validation.",
   "type": "object",
-  "required": ["name"],
+  "required": [
+    "name"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": {
@@ -47,7 +49,9 @@
     },
     "keywords": {
       "type": "array",
-      "items": { "type": "string" },
+      "items": {
+        "type": "string"
+      },
       "description": "Keywords for discovery and search."
     },
     "skills": {
@@ -63,15 +67,36 @@
       "description": "Path(s) to command files; defaults to the commands/ directory."
     },
     "hooks": {
-      "oneOf": [{ "type": "string" }, { "type": "object" }],
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object"
+        }
+      ],
       "description": "Path to a hooks configuration file, or an inline hooks object."
     },
     "mcpServers": {
-      "oneOf": [{ "type": "string" }, { "type": "object" }],
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object"
+        }
+      ],
       "description": "Path to an MCP server configuration file, or an inline configuration object."
     },
     "lspServers": {
-      "oneOf": [{ "type": "string" }, { "type": "object" }],
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object"
+        }
+      ],
       "description": "Path to an LSP server configuration file, or an inline configuration object."
     },
     "outputStyles": {
@@ -84,7 +109,9 @@
     },
     "dependencies": {
       "type": "object",
-      "additionalProperties": { "type": "string" },
+      "additionalProperties": {
+        "type": "string"
+      },
       "description": "Other plugins this plugin depends on, keyed by plugin name."
     },
     "experimental": {
@@ -98,23 +125,55 @@
     "metadata": {
       "type": "object",
       "description": "Arbitrary additional metadata."
+    },
+    "settings": {
+      "description": "Optional Claude Code settings component declaration; validated by the Claude Code CLI."
+    },
+    "themes": {
+      "description": "Optional Claude Code themes component declaration; validated by the Claude Code CLI."
+    },
+    "workflows": {
+      "description": "Optional Claude Code workflows component declaration; validated by the Claude Code CLI."
+    },
+    "channels": {
+      "description": "Optional Claude Code channels component declaration; validated by the Claude Code CLI."
+    },
+    "monitors": {
+      "description": "Optional Claude Code monitors component declaration; validated by the Claude Code CLI."
     }
   },
   "$defs": {
     "author": {
       "type": "object",
-      "required": ["name"],
+      "required": [
+        "name"
+      ],
       "additionalProperties": false,
       "properties": {
-        "name": { "type": "string", "minLength": 1 },
-        "email": { "type": "string", "format": "email" },
-        "url": { "type": "string" }
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "url": {
+          "type": "string"
+        }
       }
     },
     "pathOrPaths": {
       "oneOf": [
-        { "type": "string" },
-        { "type": "array", "items": { "type": "string" } }
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
       ]
     },
     "semver": {

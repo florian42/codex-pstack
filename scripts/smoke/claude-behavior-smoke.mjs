@@ -206,7 +206,7 @@ if (options.eval) {
   const copy = mkdtempSync(join(tmpdir(), "pstack-eval-plugin-"));
   cpSync(options.pluginDir, copy, { recursive: true });
   cpSync(resolve(root, "scripts/smoke/evals"), join(copy, "evals"), { recursive: true });
-  const evalProc = spawnSync("claude", ["plugin", "eval", copy, "--no-publish", "--allow-tools", "Edit", ...(options.model ? ["--model", options.model] : [])], { cwd: fixture("comment-repo"), stdio: "inherit" });
+  const evalProc = spawnSync("claude", ["plugin", "eval", copy, "--no-publish", "--allow-tools", "Edit", "Bash(git status *)", "Bash(git log *)", ...(options.model ? ["--model", options.model] : [])], { cwd: fixture("comment-repo"), stdio: "inherit" });
   rmSync(copy, { recursive: true, force: true });
   process.exit(evalProc.status ?? 1);
 }

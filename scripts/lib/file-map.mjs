@@ -93,6 +93,11 @@ function addCopiedSkillResources(files, resources) {
  * slug plus its own keys, so the copy renames `name`, drops the keys the target
  * does not understand, and sets the ones it does.
  */
+/** Quote a frontmatter value only when a YAML parser would misread it bare. */
+function yamlScalar(value) {
+  return /: |\s#|^[\[\{"'&*!|>%@`]|^\s|\s$/.test(value) ? JSON.stringify(value) : value;
+}
+
 export function agentContents(target, agent) {
   const sourcePath = resolve(target.sourceRoot, agent.source);
   const text = readFileSync(sourcePath, "utf8");
@@ -123,7 +128,7 @@ export function agentContents(target, agent) {
       continue;
     }
     if (overrides.has(key)) {
-      rewritten.push(`${key}: ${overrides.get(key)}`);
+      rewritten.push(`${key}: ${yamlScalar(overrides.get(key))}`);
       applied.add(key);
       continue;
     }
@@ -133,7 +138,7 @@ export function agentContents(target, agent) {
     throw new Error(`copied agent ${agent.source} has no frontmatter name to rewrite`);
   }
   for (const [key, value] of overrides) {
-    if (!applied.has(key)) rewritten.push(`${key}: ${value}`);
+    if (!applied.has(key)) rewritten.push(`${key}: ${yamlScalar(value)}`);
   }
   return Buffer.from(["---", ...rewritten, ...lines.slice(end)].join("\n"));
 }

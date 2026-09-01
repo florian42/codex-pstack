@@ -165,6 +165,19 @@ Expect the supported skill list and exactly two agents, `comment-sicko` and
    `watch-pr` launcher from the installed plugin without installing
    dependencies.
 
+### Canonical files this fork edits
+
+Upstream syncs conflict where the fork rewords canonical files. The fork keeps
+each edit to a single phrase or a small script change. Files edited for the
+Claude Code target: `skills/poteto-mode/SKILL.md` (runtime-owned route list),
+`skills/poteto-mode/playbooks/autonomous-run.md`, `babysit.md`,
+`multi-phase-plan.md`, `orchestrate.md`, and `worktree-cleanup.md`
+(runtime-neutral wording and a transcript-source safety gate),
+`agents/poteto-agent.md` (one phrase), `skills/poteto-mode/scripts/watch-pr/`
+(dependency-free argument parsing), `scripts/worktree-audit.sh` (transcript
+root parameter and portable `stat`), and `scripts/orch/` (renamed entry file
+and the `claude-local-session` profile).
+
 For every upstream pstack sync, follow the evergreen [maintenance
 contract](https://github.com/florian42/codex-pstack/issues/1): review the pstack
 diff, regenerate and validate every target, reinstall, use a fresh session for
