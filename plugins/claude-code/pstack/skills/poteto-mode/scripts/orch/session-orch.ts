@@ -2,7 +2,15 @@
 
 import { readFileSync, realpathSync } from "node:fs";
 import { isAbsolute, resolve } from "node:path";
-import { initializeJournal, openJournal, sha256, type Journal } from "./journal.ts";
+import {
+  defaultMaxCodeDispatches,
+  initializeJournal,
+  isProfile,
+  openJournal,
+  sha256,
+  type Journal,
+  type OrchestrateProfile,
+} from "./journal.ts";
 import type { Checkout, ProgramEvent, ProgramView } from "./program.ts";
 
 interface Arguments {
@@ -50,6 +58,40 @@ function operand(args: Arguments, index: number, label: string): string {
   const value = args.operands[index];
   if (value === undefined || value.trim().length === 0) throw new Error(`${label} is required`);
   return value;
+}
+
+function profileFlag(args: Arguments): OrchestrateProfile {
+  const value = optionalFlag(args, "--profile") ?? "codex-local-session";
+  if (!isProfile(value)) {
+    throw new Error(
+      "--profile supports only codex-local-session or claude-local-session",
+    );
+  }
+  return value;
+}
+
+/**
+ * How many code units may hold a dispatch at once. `codex-local-session` keeps
+ * the single-writer rule; `claude-local-session` is unbounded unless the
+ * coordinator caps it explicitly.
+ */
+function maxCodeDispatchesFlag(args: Arguments, profile: OrchestrateProfile): number {
+  const value = optionalFlag(args, "--max-code-dispatches");
+  if (value === undefined) return defaultMaxCodeDispatches(profile);
+  if (value === "unbounded") {
+    if (profile === "codex-local-session") {
+      throw new Error("--max-code-dispatches must be 1 on codex-local-session");
+    }
+    return Number.POSITIVE_INFINITY;
+  }
+  if (!/^[1-9][0-9]*$/.test(value)) {
+    throw new Error("--max-code-dispatches must be a positive integer or unbounded");
+  }
+  const parsed = Number(value);
+  if (profile === "codex-local-session" && parsed !== 1) {
+    throw new Error("--max-code-dispatches must be 1 on codex-local-session");
+  }
+  return parsed;
 }
 
 function git(repo: string, values: readonly string[]): string {
@@ -118,6 +160,9 @@ function status(journal: Journal): unknown {
   });
   return {
     profile: journal.metadata.profile,
+    maxCodeDispatches: Number.isFinite(journal.metadata.maxCodeDispatches)
+      ? journal.metadata.maxCodeDispatches
+      : "unbounded",
     program: journal.metadata.program,
     repo: journal.metadata.repo,
     integrationWriter: journal.metadata.integrationWriter,
@@ -141,9 +186,12 @@ function run(args: Arguments): unknown {
     if (git(repo, ["status", "--porcelain"]).length !== 0) {
       throw new Error("repository must be clean at initialization");
     }
+    const profile = profileFlag(args);
     const journal = initializeJournal({
       store,
       repo,
+      profile,
+      maxCodeDispatches: maxCodeDispatchesFlag(args, profile),
       program: flag(args, "--program"),
       integrationWriter: optionalFlag(args, "--integration-writer") ?? "coordinator",
       initialBranch: git(repo, ["branch", "--show-current"]),

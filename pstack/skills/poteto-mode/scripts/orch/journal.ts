@@ -10,14 +10,18 @@ import {
   type ProgramView,
 } from "./program.ts";
 
+export type OrchestrateProfile = "codex-local-session" | "claude-local-session";
+
 export interface JournalMetadata {
   readonly schema: 1;
-  readonly profile: "codex-local-session";
+  readonly profile: OrchestrateProfile;
   readonly repo: string;
   readonly program: string;
   readonly integrationWriter: string;
   readonly initialBranch: string;
   readonly initialHead: string;
+  /** Concurrent `isolated-worktree` dispatch cap; `Infinity` means unbounded. */
+  readonly maxCodeDispatches: number;
 }
 
 export interface InitializeJournalInput {
@@ -27,6 +31,44 @@ export interface InitializeJournalInput {
   readonly integrationWriter: string;
   readonly initialBranch: string;
   readonly initialHead: string;
+  readonly profile?: OrchestrateProfile;
+  readonly maxCodeDispatches?: number;
+}
+
+export function isProfile(value: string): value is OrchestrateProfile {
+  return value === "codex-local-session" || value === "claude-local-session";
+}
+
+/** The cap a profile uses when `--max-code-dispatches` is not supplied. */
+export function defaultMaxCodeDispatches(profile: OrchestrateProfile): number {
+  return profile === "codex-local-session" ? 1 : Number.POSITIVE_INFINITY;
+}
+
+function parseMaxCodeDispatches(value: string): number {
+  if (value === "unbounded") return Number.POSITIVE_INFINITY;
+  if (!/^[1-9][0-9]*$/.test(value)) {
+    throw new Error("maxCodeDispatches must be a positive integer or unbounded");
+  }
+  return Number(value);
+}
+
+function formatMaxCodeDispatches(value: number): string {
+  return Number.isFinite(value) ? String(value) : "unbounded";
+}
+
+function serializeMetadata(
+  metadata: JournalMetadata,
+): Readonly<Record<string, string>> {
+  return {
+    schema: "1",
+    profile: metadata.profile,
+    repo: metadata.repo,
+    program: metadata.program,
+    integrationWriter: metadata.integrationWriter,
+    initialBranch: metadata.initialBranch,
+    initialHead: metadata.initialHead,
+    maxCodeDispatches: formatMaxCodeDispatches(metadata.maxCodeDispatches),
+  };
 }
 
 interface EventRow {
@@ -95,7 +137,8 @@ function readMetadata(database: Database): JournalMetadata {
   const initialHead = values.get("initialHead");
   if (
     schemaValue !== "1" ||
-    profile !== "codex-local-session" ||
+    profile === undefined ||
+    !isProfile(profile) ||
     repo === undefined ||
     program === undefined ||
     integrationWriter === undefined ||
@@ -104,6 +147,12 @@ function readMetadata(database: Database): JournalMetadata {
   ) {
     throw new Error("invalid Codex Orchestrate journal metadata");
   }
+  // Journals written before the cap was recorded fall back to their profile's
+  // default, so an existing store still replays.
+  const maxCodeDispatches = parseMaxCodeDispatches(
+    values.get("maxCodeDispatches") ??
+      formatMaxCodeDispatches(defaultMaxCodeDispatches(profile)),
+  );
   return {
     schema: 1,
     profile,
@@ -112,11 +161,12 @@ function readMetadata(database: Database): JournalMetadata {
     integrationWriter,
     initialBranch,
     initialHead,
+    maxCodeDispatches,
   };
 }
 
-function replay(database: Database): ProgramView {
-  let view = initialProgram();
+function replay(database: Database, maxCodeDispatches: number): ProgramView {
+  let view = initialProgram(maxCodeDispatches);
   const rows = database
     .query<EventRow, []>("SELECT payload_json FROM events ORDER BY sequence")
     .all();
@@ -137,6 +187,7 @@ export interface Journal {
 
 function journal(database: Database): Journal {
   const metadata = readMetadata(database);
+  const replayProgram = (): ProgramView => replay(database, metadata.maxCodeDispatches);
   const appendTransaction = database.transaction(
     (event: ProgramEvent, artifacts: readonly Uint8Array[]): ProgramView => {
       const payload = JSON.stringify(event);
@@ -147,10 +198,10 @@ function journal(database: Database): Journal {
         if (existing.payload_json !== payload) {
           throw new Error(`event ${event.id} already exists with different data`);
         }
-        return replay(database);
+        return replayProgram();
       }
 
-      const next = applyEvent(replay(database), event);
+      const next = applyEvent(replayProgram(), event);
       const insertArtifact = database.query(
         "INSERT OR IGNORE INTO artifacts(digest, body) VALUES (?, ?)",
       );
@@ -181,7 +232,7 @@ function journal(database: Database): Journal {
 
   const recoverTransaction = database.transaction((sessionId: string): readonly string[] => {
     requireNonEmpty("session", sessionId);
-    let current = replay(database);
+    let current = replayProgram();
     const interrupted: string[] = [];
     for (const unit of current.units.values()) {
       if (unit.state.kind !== "dispatched") continue;
@@ -219,7 +270,7 @@ function journal(database: Database): Journal {
       return row.body;
     },
     recover: (sessionId) => recoverTransaction.immediate(sessionId),
-    view: () => replay(database),
+    view: () => replayProgram(),
     close: () => database.close(),
   };
 }
@@ -231,18 +282,24 @@ export function initializeJournal(input: InitializeJournalInput): Journal {
   requireNonEmpty("integration writer", input.integrationWriter);
   requireNonEmpty("initial branch", input.initialBranch);
   requireNonEmpty("initial head", input.initialHead);
+  const profile: OrchestrateProfile = input.profile ?? "codex-local-session";
+  const maxCodeDispatches = input.maxCodeDispatches ?? defaultMaxCodeDispatches(profile);
+  if (maxCodeDispatches < 1 || (Number.isFinite(maxCodeDispatches) && !Number.isInteger(maxCodeDispatches))) {
+    throw new Error("max code dispatches must be a positive integer or unbounded");
+  }
   mkdirSync(dirname(input.store), { recursive: true });
   const database = new Database(input.store, { create: true, strict: true });
   schema(database);
-  const expected: Readonly<Record<string, string>> = {
-    schema: "1",
-    profile: "codex-local-session",
+  const expected = serializeMetadata({
+    schema: 1,
+    profile,
     repo: input.repo,
     program: input.program,
     integrationWriter: input.integrationWriter,
     initialBranch: input.initialBranch,
     initialHead: input.initialHead,
-  };
+    maxCodeDispatches,
+  });
   const initialize = database.transaction(() => {
     const count = database.query<{ readonly count: number }, []>("SELECT COUNT(*) AS count FROM metadata").get();
     if (count === null) throw new Error("could not inspect journal metadata");
@@ -251,16 +308,8 @@ export function initializeJournal(input: InitializeJournalInput): Journal {
       for (const [key, value] of Object.entries(expected)) insert.run(key, value);
       return;
     }
-    const actual = readMetadata(database);
-    if (JSON.stringify(actual) !== JSON.stringify({
-      schema: 1,
-      profile: "codex-local-session",
-      repo: input.repo,
-      program: input.program,
-      integrationWriter: input.integrationWriter,
-      initialBranch: input.initialBranch,
-      initialHead: input.initialHead,
-    })) {
+    const actual = serializeMetadata(readMetadata(database));
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
       throw new Error("journal already belongs to a different program");
     }
   });

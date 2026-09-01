@@ -34,6 +34,14 @@ export interface UnitView {
 export interface ProgramView {
   readonly eventIds: ReadonlySet<string>;
   readonly units: ReadonlyMap<string, UnitView>;
+  /**
+   * How many `isolated-worktree` units may hold a dispatch at once. The
+   * `codex-local-session` profile pins this to 1; `claude-local-session`
+   * leaves it unbounded (`Number.POSITIVE_INFINITY`) or at an explicit cap,
+   * because each of its code workers gets its own worktree. It never relaxes
+   * the single integration writer, which is enforced outside the reducer.
+   */
+  readonly maxConcurrentCodeDispatches: number;
   readonly integrationHead?: string;
 }
 
@@ -75,8 +83,13 @@ export type ProgramEvent =
       readonly attemptId: string;
     };
 
-export function initialProgram(): ProgramView {
-  return { eventIds: new Set(), units: new Map() };
+export function initialProgram(
+  maxConcurrentCodeDispatches: number = 1,
+): ProgramView {
+  if (maxConcurrentCodeDispatches < 1) {
+    throw new Error("maxConcurrentCodeDispatches must be at least 1");
+  }
+  return { eventIds: new Set(), units: new Map(), maxConcurrentCodeDispatches };
 }
 
 function stateName(state: UnitState): string {
@@ -101,6 +114,7 @@ function replaceUnit(
   return {
     units,
     eventIds,
+    maxConcurrentCodeDispatches: program.maxConcurrentCodeDispatches,
     ...(program.integrationHead === undefined ? {} : { integrationHead: program.integrationHead }),
   };
 }
@@ -123,13 +137,18 @@ export function applyEvent(program: ProgramView, event: ProgramEvent): ProgramVi
         throw new Error(`cannot dispatch ${event.unitId} from ${stateName(unit.state)}`);
       }
       if (unit.spec.checkout.kind === "isolated-worktree") {
-        const activeWriter = [...program.units.values()].find(
+        const active = [...program.units.values()].filter(
           (candidate) =>
             candidate.spec.checkout.kind === "isolated-worktree" &&
             candidate.state.kind === "dispatched",
         );
-        if (activeWriter !== undefined) {
-          throw new Error(`integration writer already reserved by ${activeWriter.spec.id}`);
+        if (active.length >= program.maxConcurrentCodeDispatches) {
+          const names = active.map((candidate) => candidate.spec.id).join(", ");
+          const verb = active.length === 1 ? "is" : "are";
+          throw new Error(
+            `code dispatch limit reached: ${names} ${verb} already dispatched ` +
+              `(limit ${program.maxConcurrentCodeDispatches})`,
+          );
         }
       }
       return replaceUnit(program, event.id, {

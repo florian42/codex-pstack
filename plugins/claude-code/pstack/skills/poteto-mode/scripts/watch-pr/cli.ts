@@ -91,6 +91,21 @@ const VALUE_OPTIONS = [
   "timeout",
   "max-query-errors",
 ] as const satisfies readonly LongName[];
+/**
+ * The boolean flags. `parseArgs` runs non-strict so that an unknown option can
+ * be reported with our own wording, but non-strict mode also stores the string
+ * from `--stack=true` on a boolean option instead of rejecting it, which would
+ * silently read back as "not set". These names are checked for an attached
+ * value and refused as usage errors.
+ */
+const BOOLEAN_OPTIONS = [
+  "stack",
+  "queued-stack",
+  "status-only",
+  "allow-draft",
+  "pretty",
+  "help",
+] as const satisfies readonly LongName[];
 function positiveNumber(value: string): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0)
@@ -224,9 +239,16 @@ function parseChecked(argv: readonly string[]): CliOptions {
   for (const token of tokens) {
     if (token.kind === "positional") positionals += 1;
     if (token.kind !== "option") continue;
-    if (token.name === "help") throw new HelpRequested();
     if (!(token.name in FLAG_SPEC))
       throw new UsageError(`unknown option '${token.rawName}'`);
+    if (
+      (BOOLEAN_OPTIONS as readonly string[]).includes(token.name) &&
+      token.value !== undefined
+    )
+      throw new UsageError(
+        `option '${FLAG_SPEC[token.name as LongName]}' does not take a value`
+      );
+    if (token.name === "help") throw new HelpRequested();
   }
   if (positionals > 0)
     throw new UsageError(

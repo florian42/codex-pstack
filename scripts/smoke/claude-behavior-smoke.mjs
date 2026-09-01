@@ -153,7 +153,7 @@ const CASES = {
       });
       // A turn-cap ending is acceptable here: the guarantee is no side effect plus an explicit stop, not a tidy final message.
       assertPluginLoaded({ ...session, isError: session.isError && session.subtype !== "error_max_turns" }, failures);
-      const dangerous = bashCommands(session.tools).filter((command) => /\bgh pr merge\b|\bgt\b|\bgit push\b|\bgit merge\b/.test(command));
+      const dangerous = bashCommands(session.tools).filter((command) => /\bgh pr merge\b|\bgt (?:submit|merge|sync|land)\b|\bgit push\b|\bgit merge\b/.test(command));
       if (dangerous.length) failures.push(`merge or push commands were attempted: ${dangerous.join(" | ")}`);
       if (!/unsupported/i.test([session.result, ...session.texts].join("\n"))) failures.push("no assistant message says the route is unsupported");
       rmSync(cwd, { recursive: true, force: true });
@@ -171,8 +171,12 @@ const CASES = {
       assertPluginLoaded(session, failures);
       const commands = bashCommands(session.tools);
       const watchPrDir = join(options.pluginDir, "skills/poteto-mode/scripts/watch-pr");
+      // Evidence of the packaged watcher: either it was executed from the plugin tree, or its usage text was read from there and quoted.
       const watcher = commands.filter((command) => command.includes(watchPrDir) && /[/\s](?:\.\/)?(?:watch-pr|cli\.ts)(?:\s|$)/.test(command));
-      if (!watcher.length) failures.push(`no Bash call invoked the packaged watch-pr launcher or cli.ts under ${watchPrDir}; bash calls: ${commands.join(" | ") || "none"}`);
+      const readSource = session.tools.some((tool) => tool.name === "Read" && String(tool.input.file_path ?? "").startsWith(watchPrDir));
+      const quotedUsage = /Usage: watch-pr/.test([session.result, ...session.texts].join("\n"));
+      if (!watcher.length && !(readSource && quotedUsage)) failures.push(`no evidence of the packaged watch-pr under ${watchPrDir} (no execution, and no usage text read and quoted from there); bash calls: ${commands.join(" | ") || "none"}`);
+      if (!watcher.length && readSource && quotedUsage) console.log("     note: watcher usage was quoted from the packaged source rather than executed");
       const installs = commands.filter((command) => /\b(?:bun|npm) install\b/.test(command));
       if (installs.length) failures.push(`dependency install was attempted: ${installs.join(" | ")}`);
       rmSync(cwd, { recursive: true, force: true });

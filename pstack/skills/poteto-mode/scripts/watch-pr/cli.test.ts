@@ -101,6 +101,26 @@ describe("parseArgs", () => {
       expect(harness.stderr.join("")).toContain("error:");
     }
   });
+
+  it("refuses a value attached to a boolean flag instead of dropping it", async () => {
+    for (const [argv, flag] of [
+      [["--stack=true"], "--stack"],
+      [["--pretty=true"], "--pretty"],
+    ] as const) {
+      const harness = testRuntime(fakeReader());
+      expect(await main([...argv], harness.runtime)).toBe(64);
+      expect(harness.stdout).toEqual([]);
+      expect(harness.stderr.join("")).toBe(
+        `error: option '${flag}' does not take a value\n`
+      );
+    }
+  });
+
+  it("still accepts the bare boolean flags", () => {
+    const parsed = parseArgs(["--stack", "--pretty"], silentIo);
+    expect(parsed.mode).toBe("stack");
+    expect(parsed.pretty).toBe(true);
+  });
 });
 
 describe("rendering", () => {

@@ -100,10 +100,19 @@ git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt;
 	# followed by "/" or a quote so glint-482 does not match glint-482-r37.
 	last="-"; last_ts=0
 	if [ -n "$transcripts" ] && [ -d "$transcripts" ]; then
-		f=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
-			| xargs stat -f '%m %N' 2>/dev/null | sort -rn | head -1)
+		# GNU coreutils first, BSD/macOS second: the two disagree on both
+		# the mtime format string and the epoch-to-date flag. The hit list is
+		# captured first so the fallback still has input to stat.
+		hits=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null)
+		f=""
+		if [ -n "$hits" ]; then
+			f=$(printf '%s\n' "$hits" | xargs stat -c '%Y %n' 2>/dev/null | sort -rn | head -1)
+			[ -n "$f" ] || f=$(printf '%s\n' "$hits" | xargs stat -f '%m %N' 2>/dev/null | sort -rn | head -1)
+		fi
 		if [ -n "$f" ]; then last_ts=$(echo "$f" | awk '{print $1}')
-			last=$(date -r "$last_ts" '+%Y-%m-%d' 2>/dev/null); fi
+			last=$(date -d @"$last_ts" '+%Y-%m-%d' 2>/dev/null \
+				|| date -r "$last_ts" '+%Y-%m-%d' 2>/dev/null)
+			[ -n "$last" ] || last="?"; fi
 	fi
 	recent=$([ "$last_ts" -gt 0 ] 2>/dev/null && [ $(( (now - last_ts) / 86400 )) -le 4 ] && echo yes || echo no)
 
