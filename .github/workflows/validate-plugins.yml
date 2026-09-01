@@ -13,6 +13,9 @@ on:
       - "pstack/docs/**"
       - "pstack/LICENSE"
       - "schemas/**"
+      - "scripts/lib/**"
+      - "scripts/generate-plugin.mjs"
+      - "scripts/validate-plugin.mjs"
       - "scripts/generate-codex-pstack.mjs"
       - "scripts/validate-codex-pstack.mjs"
 
@@ -26,8 +29,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Validate Codex pstack compatibility
-        run: node scripts/validate-codex-pstack.mjs
+      - name: Validate pstack target compatibility
+        run: node scripts/validate-plugin.mjs --all
 
       - name: Install dependencies
         run: npm install --no-save ajv ajv-formats

@@ -1,4 +1,37 @@
 {
+  "target": "codex",
+  "displayName": "Codex",
+  "sourceRoot": "pstack",
+  "outputRoot": ".agents/plugins/pstack",
+  "manifestSource": "pstack/.codex-plugin/plugin.json",
+  "manifestDestination": ".codex-plugin/plugin.json",
+  "referenceManifest": "pstack/.cursor-plugin/plugin.json",
+  "marketplace": {
+    "path": ".agents/plugins/marketplace.json",
+    "name": "codex-pstack",
+    "pluginName": "pstack",
+    "sourcePointer": "./.agents/plugins/pstack"
+  },
+  "portabilityRecord": "references/runtime/skill-portability.md",
+  "portabilityColumn": "Classification",
+  "runtimeMapping": "references/runtime/codex.md",
+  "stopPageTitle": "Unsupported on Codex",
+  "stopPageMappingLink": "../../../references/runtime/codex.md",
+  "generatedBy": "scripts/generate-codex-pstack.mjs",
+  "regenerateCommand": "node scripts/generate-codex-pstack.mjs",
+  "manifestChecks": "codex",
+  "bannedVocabularies": [
+    "codex-banned-platform-terms"
+  ],
+  "forbiddenGeneratedDirectories": [
+    "agents",
+    "automations",
+    "codex-skills"
+  ],
+  "requiredSkills": [
+    "poteto-mode"
+  ],
+  "requiredAgents": [],
   "unsupportedResources": [
     {
       "path": "poteto-mode/playbooks/autonomous-run.md",
