@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
-import { existsSync, readFileSync, readdirSync, realpathSync, statSync } from "node:fs";
-import { dirname, extname, relative, resolve, sep } from "node:path";
+import {
+  accessSync,
+  constants,
+  existsSync,
+  readFileSync,
+  readdirSync,
+  realpathSync,
+  statSync,
+} from "node:fs";
+import { delimiter, dirname, extname, relative, resolve, sep } from "node:path";
 import { spawnSync } from "node:child_process";
 
 import { parseFrontmatter } from "./lib/frontmatter.mjs";
@@ -9,11 +17,27 @@ import { toPosix, walkFiles, walkFilesIfPresent } from "./lib/fs.mjs";
 import { readPortability } from "./lib/portability.mjs";
 import { isSemver, MANIFESTS, versionParityFailures } from "./lib/manifest.mjs";
 import { loadTarget, repositoryRoot, targetNames } from "./lib/targets.mjs";
+import { claudeCodeChecks } from "./lib/targets/claude-code.mjs";
 import { codexChecks } from "./lib/targets/codex.mjs";
 import { resolveVocabularies } from "./lib/vocabulary.mjs";
 
 /** Bundles of target-specific checks, selected by the config's manifestChecks. */
-const CHECK_BUNDLES = { codex: codexChecks };
+const CHECK_BUNDLES = { codex: codexChecks, "claude-code": claudeCodeChecks };
+
+/** First directory on PATH holding an executable named `command`, or null. */
+function resolveExecutable(command) {
+  for (const directory of (process.env.PATH ?? "").split(delimiter)) {
+    if (directory === "") continue;
+    const candidate = resolve(directory, command);
+    try {
+      accessSync(candidate, constants.X_OK);
+      return candidate;
+    } catch {
+      continue;
+    }
+  }
+  return null;
+}
 
 function parseArguments(argv) {
   const targets = [];
@@ -434,7 +458,12 @@ function validateTarget(target) {
         `plugin entry name must be ${target.marketplace.pluginName}`,
       );
     }
-    if (entry?.source?.source !== "local" || entry?.source?.path !== target.marketplace.sourcePointer) {
+    if (checks.validateMarketplaceSource !== undefined) {
+      checks.validateMarketplaceSource(context, entry, text);
+    } else if (
+      entry?.source?.source !== "local" ||
+      entry?.source?.path !== target.marketplace.sourcePointer
+    ) {
       fail(
         marketplacePath,
         lineOf(text, '"source"'),
@@ -527,11 +556,76 @@ function validateTarget(target) {
         );
       }
     }
+  }
+
+  /**
+   * The agent mirror of validateGeneratedSkillNames: a registered plugin agent
+   * is dispatched by its file slug, so its frontmatter name must equal it.
+   */
+  function validateGeneratedAgentNames() {
+    const generatedAgentsRoot = resolve(generatedRoot, "agents");
+    for (const path of walkFilesIfPresent(generatedAgentsRoot).filter((candidate) =>
+      candidate.endsWith(".md"),
+    )) {
+      const text = readText(path);
+      if (text === null) continue;
+      const frontmatter = checkFrontmatter(path, text);
+      if (frontmatter === null) continue;
+      const name = frontmatter.get("name");
+      const expectedName = relative(generatedAgentsRoot, path).replace(/\.md$/, "");
+      if (name !== undefined && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)) {
+        fail(
+          path,
+          lineOf(text, "name:"),
+          `frontmatter name must be lowercase hyphen-case for ${target.displayName} discovery`,
+        );
+      }
+      if (name !== expectedName) {
+        fail(path, lineOf(text, "name:"), `frontmatter name must match agent file ${expectedName}`);
+      }
+    }
     for (const required of target.requiredAgents) {
-      const agentPath = resolve(generatedRoot, `agents/${required}.md`);
+      const agentPath = resolve(generatedAgentsRoot, `${required}.md`);
       if (!existsSync(agentPath)) {
         fail(agentPath, 1, `${target.displayName} must discover an agent named ${required}`);
       }
+    }
+  }
+
+  /**
+   * Hand the generated tree and the marketplace to the platform's own CLI when
+   * the config names one and it is installed. Absent CLI is a printed notice,
+   * not a failure: the dependency-free checks still gate the pull request.
+   */
+  function validateWithPlatformCli() {
+    const cli = target.cliValidate;
+    if (cli === null) return;
+    const executable = resolveExecutable(cli.command);
+    if (executable === null) {
+      console.log(
+        `Skipping ${target.displayName} CLI validation: ${cli.command} is not on PATH.`,
+      );
+      return;
+    }
+    let passed = 0;
+    const subjects = [generatedRoot, target.marketplace.path];
+    for (const subject of subjects) {
+      const result = spawnSync(executable, [...cli.args, subject], { cwd: root, encoding: "utf8" });
+      if (result.error !== undefined) {
+        fail(subject, 1, `${cli.command} validation could not run: ${result.error.message}`);
+        continue;
+      }
+      if (result.status !== 0) {
+        const detail = `${result.stderr}${result.stdout}`.trim();
+        fail(subject, 1, `${cli.command} validation failed: ${detail || `exit ${result.status}`}`);
+        continue;
+      }
+      passed += 1;
+    }
+    if (passed === subjects.length) {
+      console.log(
+        `${target.displayName} CLI validation passed: ${[cli.command, ...cli.args].join(" ")} on ${passed} path(s).`,
+      );
     }
   }
 
@@ -547,7 +641,9 @@ function validateTarget(target) {
       return;
     }
     const terms = resolveVocabularies(target.bannedVocabularies);
-    for (const path of walkFiles(generatedSkills).filter((candidate) => extname(candidate) === ".md")) {
+    const generatedAgents = resolve(generatedRoot, "agents");
+    const scanned = [...walkFiles(generatedSkills), ...walkFilesIfPresent(generatedAgents)];
+    for (const path of scanned.filter((candidate) => extname(candidate) === ".md")) {
       const text = readText(path);
       if (text === null) continue;
       for (const [label, expression] of terms) {
@@ -674,12 +770,14 @@ function validateTarget(target) {
   validateMarketplace();
   const portability = validateSkillsAndPortability();
   validateGeneratedSkillNames();
+  validateGeneratedAgentNames();
   validatePlatformCoupling();
   validateMarkdownLinks();
   validateBacktickedLocalReferences();
   checks.validateNoDuplicateDistribution?.(context);
   validateUnsupportedResourceContract();
   checks.validateSupportedPlaybookRuntimeContract?.(context);
+  validateWithPlatformCli();
 
   return { errors, skillCount: skillDirectories().length, portabilityCount: portability.size };
 }

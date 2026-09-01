@@ -1,0 +1,20 @@
+{
+  "name": "pstack",
+  "version": "0.14.5",
+  "description": "Rigorous engineering workflows for understanding, designing, implementing, reviewing, and verifying software with agents.",
+  "author": {
+    "name": "Lauren Tan",
+    "url": "https://github.com/poteto"
+  },
+  "homepage": "https://github.com/florian42/codex-pstack/tree/main/pstack",
+  "repository": "https://github.com/florian42/codex-pstack",
+  "license": "MIT",
+  "keywords": [
+    "pstack",
+    "poteto-mode",
+    "engineering-workflows",
+    "subagents",
+    "verification"
+  ],
+  "skills": "./skills/"
+}

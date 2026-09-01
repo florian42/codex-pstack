@@ -21,7 +21,8 @@ authoritative; do not assume a desktop-only tool exists in CLI or cloud tasks.
 `autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`, `eval`,
 `multi-phase-plan`, `session-pickup`, `shipping`, and `worktree-cleanup` are
 unsupported. The Codex distribution replaces each with an explicit stop page.
-`orchestrate` is supported through the `codex-local-session` profile.
+`orchestrate` is supported through the `codex-local-session` profile in the
+[Orchestrate mapping](orchestrate-codex.md).
 
 ## Codex exclusions in the first release
 

@@ -85,6 +85,68 @@ function addCopiedSkillResources(files, resources) {
   }
 }
 
+/**
+ * Copy a canonical agent file, rewriting its frontmatter for one target.
+ *
+ * The canonical file is never edited: Cursor dispatches Comment Sicko by its
+ * display name. A target that registers agents natively wants the lowercase
+ * slug plus its own keys, so the copy renames `name`, drops the keys the target
+ * does not understand, and sets the ones it does.
+ */
+export function agentContents(target, agent) {
+  const sourcePath = resolve(target.sourceRoot, agent.source);
+  const text = readFileSync(sourcePath, "utf8");
+  const lines = text.split("\n");
+  if (lines[0] !== "---") {
+    throw new Error(`copied agent ${agent.source} must start with YAML frontmatter`);
+  }
+  const end = lines.indexOf("---", 1);
+  if (end === -1) {
+    throw new Error(`copied agent ${agent.source} frontmatter is missing its closing ---`);
+  }
+
+  const removed = new Set(agent.removeFrontmatter);
+  const overrides = new Map(Object.entries(agent.frontmatter));
+  const applied = new Set();
+  const rewritten = [];
+  let renamed = false;
+  for (const line of lines.slice(1, end)) {
+    const key = line.match(/^([A-Za-z][A-Za-z0-9_-]*):/)?.[1];
+    if (key === undefined) {
+      rewritten.push(line);
+      continue;
+    }
+    if (removed.has(key)) continue;
+    if (key === "name") {
+      rewritten.push(`name: ${agent.name}`);
+      renamed = true;
+      continue;
+    }
+    if (overrides.has(key)) {
+      rewritten.push(`${key}: ${overrides.get(key)}`);
+      applied.add(key);
+      continue;
+    }
+    rewritten.push(line);
+  }
+  if (!renamed) {
+    throw new Error(`copied agent ${agent.source} has no frontmatter name to rewrite`);
+  }
+  for (const [key, value] of overrides) {
+    if (!applied.has(key)) rewritten.push(`${key}: ${value}`);
+  }
+  return Buffer.from(["---", ...rewritten, ...lines.slice(end)].join("\n"));
+}
+
+function addCopiedAgents(target, files) {
+  for (const agent of target.copiedAgents) {
+    if (files.has(agent.destination)) {
+      throw new Error(`copied agent collides with generated file ${agent.destination}`);
+    }
+    files.set(agent.destination, agentContents(target, agent));
+  }
+}
+
 function stopPage(target, reason) {
   return Buffer.from(
     `# ${target.stopPageTitle}\n\n${reason} Stop this route and choose a supported playbook. See the [${target.displayName} runtime mapping](${target.stopPageMappingLink}).\n`,
@@ -135,6 +197,7 @@ export function buildFileMap(target) {
   }
 
   addCopiedSkillResources(files, copiedSkillResources(target));
+  addCopiedAgents(target, files);
 
   const hash = createHash("sha256");
   for (const [path, contents] of [...files].sort(([left], [right]) => left.localeCompare(right))) {

@@ -1,0 +1,112 @@
+{
+  "target": "claude-code",
+  "displayName": "Claude Code",
+  "sourceRoot": "pstack",
+  "outputRoot": "plugins/claude-code/pstack",
+  "manifestSource": "pstack/.claude-plugin/plugin.json",
+  "manifestDestination": ".claude-plugin/plugin.json",
+  "referenceManifest": "pstack/.cursor-plugin/plugin.json",
+  "marketplace": {
+    "path": ".claude-plugin/marketplace.json",
+    "name": "pstack-claude",
+    "pluginName": "pstack",
+    "sourcePointer": "./plugins/claude-code/pstack"
+  },
+  "portabilityRecord": "references/runtime/skill-portability.md",
+  "portabilityColumn": "Claude Code",
+  "runtimeMapping": "references/runtime/claude-code.md",
+  "stopPageTitle": "Unsupported on Claude Code",
+  "stopPageMappingLink": "../../../references/runtime/claude-code.md",
+  "generatedBy": "scripts/generate-plugin.mjs --target claude-code",
+  "regenerateCommand": "node scripts/generate-plugin.mjs --target claude-code",
+  "manifestChecks": "claude-code",
+  "cliValidate": {
+    "command": "claude",
+    "args": [
+      "plugin",
+      "validate",
+      "--strict"
+    ]
+  },
+  "bannedVocabularies": [
+    "cursor-exclusive",
+    "codex-exclusive"
+  ],
+  "forbiddenGeneratedDirectories": [
+    "automations",
+    "codex-skills"
+  ],
+  "requiredSkills": [
+    "poteto-mode",
+    "no-comments",
+    "how",
+    "swarm"
+  ],
+  "requiredAgents": [
+    "comment-sicko",
+    "poteto-agent"
+  ],
+  "unsupportedResources": [
+    {
+      "path": "poteto-mode/playbooks/autopilot-full.md",
+      "reason": "The workflow depends on Graphite stack delivery, which this runtime does not provide."
+    },
+    {
+      "path": "poteto-mode/playbooks/autopilot-stack.md",
+      "reason": "The workflow depends on Graphite stack delivery, which this runtime does not provide."
+    },
+    {
+      "path": "poteto-mode/playbooks/babysit.md",
+      "reason": "The workflow depends on pull-request monitoring utilities not yet packaged for this runtime."
+    },
+    {
+      "path": "poteto-mode/playbooks/eval.md",
+      "reason": "The workflow depends on an authorized transcript source, which this runtime does not provide."
+    },
+    {
+      "path": "poteto-mode/playbooks/multi-phase-plan.md",
+      "reason": "The workflow depends on phase-tracking utilities not yet packaged for this runtime."
+    },
+    {
+      "path": "poteto-mode/playbooks/session-pickup.md",
+      "reason": "The workflow depends on an authorized transcript source, which this runtime does not provide."
+    },
+    {
+      "path": "poteto-mode/playbooks/shipping.md",
+      "reason": "The workflow depends on Graphite stack delivery, which this runtime does not provide."
+    },
+    {
+      "path": "poteto-mode/playbooks/worktree-cleanup.md",
+      "reason": "The workflow depends on worktree bookkeeping utilities not yet packaged for this runtime."
+    }
+  ],
+  "runtimeResources": [
+    "poteto-mode/scripts/orch/session-orch.ts",
+    "poteto-mode/scripts/orch/journal.ts",
+    "poteto-mode/scripts/orch/program.ts",
+    "show-me-your-work/scripts/log.sh"
+  ],
+  "copiedSkillResources": [],
+  "copiedAgents": [
+    {
+      "source": "agents/comment-sicko.md",
+      "destination": "agents/comment-sicko.md",
+      "name": "comment-sicko",
+      "frontmatter": {
+        "tools": "Read, Grep, Glob"
+      }
+    },
+    {
+      "source": "agents/poteto-agent.md",
+      "destination": "agents/poteto-agent.md",
+      "name": "poteto-agent",
+      "removeFrontmatter": [
+        "is_background"
+      ],
+      "frontmatter": {
+        "description": "Applies poteto-mode's full agent style inside one delegated, bounded subtask when the parent explicitly wants that style for independent work. Reads the poteto-mode skill's SKILL.md in full before any work, including its inline Principles index. Not a routing target: the parent session applies /pstack:poteto-mode itself and never hands its whole task to this agent."
+      }
+    }
+  ],
+  "platformTermAllowlist": []
+}

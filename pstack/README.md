@@ -26,6 +26,10 @@ install the plugin:
 
 follow the [Codex installation guide](./docs/codex.md#install-from-github).
 
+### claude code
+
+follow the [Claude Code installation guide](./docs/claude-code.md#install-from-github).
+
 ## get started
 
 ### cursor
@@ -48,6 +52,16 @@ pstack:poteto-mode investigate how this repository validates changes. Do not edi
 ```
 
 the [Codex quick start](./docs/codex.md#start-with-poteto-mode) has the full first-use path.
+
+### claude code
+
+open a repository you want to inspect, then start a fresh session after installation. invoke `/pstack:poteto-mode` with a goal and a result it can check:
+
+```text
+/pstack:poteto-mode investigate how this repository validates changes. Do not edit anything. Show the files, commands, and evidence behind the answer.
+```
+
+the [Claude Code quick start](./docs/claude-code.md#start-with-poteto-mode) has the full first-use path, and [Use pstack with Claude Code](./docs/claude-code.md#know-the-claude-code-boundary) has the compact boundary.
 
 this repository builds the Codex package from the same canonical skill source. it omits Cursor model rules, registered Cursor agents, Benny automations, and unsupported skills. `no-comments` is the adapted exception: it packages an inert reference to the canonical Comment Sicko policy for one independent scoped comment-only review; the parent validates that diff before accepting it. unsupported Poteto Mode routes remain as explicit stop pages. see [Use pstack with Codex](./docs/codex.md#know-the-codex-boundary) for the compact boundary and [Active skill portability](./references/runtime/skill-portability.md) for the authoritative record.
 

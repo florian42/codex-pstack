@@ -8,6 +8,7 @@ import { vocabularyNames } from "./vocabulary.mjs";
 /** target name -> build config path, relative to the repository root. */
 export const TARGET_REGISTRY = {
   codex: ".agents/plugins/pstack-build.json",
+  "claude-code": "plugins/claude-code/pstack-build.json",
 };
 
 export function targetNames() {
@@ -119,6 +120,46 @@ export function loadTarget(name, root = repositoryRoot()) {
     }
   }
 
+  const copiedAgents = requireObjectArray(
+    config,
+    "copiedAgents",
+    ["source", "destination", "name"],
+    configRelative,
+  );
+  for (const [index, agent] of copiedAgents.entries()) {
+    const prefix = `${configRelative}: copiedAgents[${index}]`;
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(agent.name)) {
+      throw new Error(`${prefix}.name must be lowercase hyphen-case`);
+    }
+    const frontmatter = agent.frontmatter ?? {};
+    if (frontmatter === null || Array.isArray(frontmatter) || typeof frontmatter !== "object") {
+      throw new Error(`${prefix}.frontmatter must be an object`);
+    }
+    for (const [key, value] of Object.entries(frontmatter)) {
+      if (typeof value !== "string" || value.trim() === "") {
+        throw new Error(`${prefix}.frontmatter.${key} must be a non-empty string`);
+      }
+    }
+    const removed = agent.removeFrontmatter ?? [];
+    if (!Array.isArray(removed) || removed.some((key) => typeof key !== "string")) {
+      throw new Error(`${prefix}.removeFrontmatter must be an array of strings`);
+    }
+  }
+
+  const cliValidate = config.cliValidate ?? null;
+  if (cliValidate !== null) {
+    if (Array.isArray(cliValidate) || typeof cliValidate !== "object") {
+      throw new Error(`${configRelative}: cliValidate must be an object`);
+    }
+    requireString(cliValidate, "command", `${configRelative}: cliValidate`);
+    if (
+      !Array.isArray(cliValidate.args) ||
+      cliValidate.args.some((argument) => typeof argument !== "string")
+    ) {
+      throw new Error(`${configRelative}: cliValidate.args must be an array of strings`);
+    }
+  }
+
   const sourceRoot = resolve(root, sourceRootRelative);
   const outputRoot = resolve(root, outputRootRelative);
 
@@ -164,6 +205,14 @@ export function loadTarget(name, root = repositoryRoot()) {
     unsupportedResources: config.unsupportedResources ?? [],
     runtimeResources: config.runtimeResources ?? [],
     copiedSkillResources: config.copiedSkillResources,
+    copiedAgents: copiedAgents.map((agent) => ({
+      source: agent.source,
+      destination: toPosix(agent.destination),
+      name: agent.name,
+      frontmatter: agent.frontmatter ?? {},
+      removeFrontmatter: agent.removeFrontmatter ?? [],
+    })),
+    cliValidate,
     platformTermAllowlist: requireObjectArray(
       config,
       "platformTermAllowlist",

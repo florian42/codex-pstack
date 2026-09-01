@@ -5,6 +5,8 @@ on:
     paths:
       - ".cursor-plugin/marketplace.json"
       - ".agents/plugins/**"
+      - ".claude-plugin/**"
+      - "plugins/claude-code/**"
       - "**/plugin.json"
       - "pstack/agents/**"
       - "pstack/references/runtime/**"
@@ -14,6 +16,7 @@ on:
       - "pstack/LICENSE"
       - "schemas/**"
       - "scripts/lib/**"
+      - "scripts/lib/targets/**"
       - "scripts/generate-plugin.mjs"
       - "scripts/validate-plugin.mjs"
       - "scripts/generate-codex-pstack.mjs"

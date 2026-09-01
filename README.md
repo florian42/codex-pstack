@@ -93,6 +93,12 @@ plugins/
 This fork also packages pstack for Codex from the same canonical skill tree.
 See the [Codex installation, validation, and maintenance guide](pstack/docs/codex.md).
 
+## Claude Code pstack
+
+This fork also packages pstack for Claude Code from the same canonical skill tree,
+with `comment-sicko` and `poteto-agent` registered as plugin agents. See the
+[Claude Code installation, validation, and maintenance guide](pstack/docs/claude-code.md).
+
 ## License
 
 MIT

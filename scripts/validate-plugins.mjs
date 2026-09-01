@@ -62,10 +62,16 @@ const TARGETS = [
     marketplacePath: ".claude-plugin/marketplace.json",
     marketplaceSchema: "schemas/claude-marketplace.schema.json",
     pluginSchema: "schemas/claude-plugin.schema.json",
-    manifests: ["pstack/.claude-plugin/plugin.json"],
-    // The generated Claude Code distribution does not exist yet, so marketplace
-    // entries are schema-checked only; their source directories are not.
-    checkEntrySource: false,
+    // The Claude Code manifest is hand-written in the canonical tree and copied
+    // byte-for-byte into the generated distribution; both are validated.
+    manifests: [
+      "pstack/.claude-plugin/plugin.json",
+      "plugins/claude-code/pstack/.claude-plugin/plugin.json",
+    ],
+    // A Claude Code marketplace entry names its directory with a plain string.
+    entryDirectory: (entry) => entry.source,
+    entryManifest: (directory) => `${directory}/.claude-plugin/plugin.json`,
+    checkEntrySource: true,
   },
 ];
 

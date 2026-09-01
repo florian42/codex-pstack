@@ -69,8 +69,15 @@ function claude(prompt, { cwd, allowed = [], disallowed = [], maxTurns = 12, per
   }
   const init = events.find((event) => event.type === "system" && event.subtype === "init") ?? null;
   const final = events.find((event) => event.type === "result") ?? null;
-  return { events, tools, init, result: final?.result ?? "", isError: final?.is_error ?? proc.status !== 0, exitCode: proc.status, stderr: proc.stderr };
+  const session = { events, tools, init, result: final?.result ?? "", isError: final?.is_error ?? proc.status !== 0, exitCode: proc.status, stderr: proc.stderr, subtype: final?.subtype ?? null, turns: final?.num_turns ?? null };
+  const log = join(resultsDir, `${Date.now()}-${prompt.slice(0, 24).replace(/[^a-z0-9]+/gi, "-")}.jsonl`);
+  writeFileSync(log, `${proc.stdout ?? ""}\n--- stderr ---\n${proc.stderr ?? ""}`);
+  session.log = log;
+  return session;
 }
+
+const resultsDir = mkdtempSync(join(tmpdir(), "pstack-smoke-results-"));
+console.log(`session logs: ${resultsDir}`);
 
 function bashCommands(tools) {
   return tools.filter((tool) => tool.name === "Bash").map((tool) => String(tool.input.command ?? ""));
@@ -79,7 +86,8 @@ function bashCommands(tools) {
 function assertPluginLoaded(session, failures) {
   if (session.init === null) failures.push("no system/init event; the session did not start");
   else if (Array.isArray(session.init.plugin_errors) && session.init.plugin_errors.length > 0) failures.push(`plugin_errors: ${JSON.stringify(session.init.plugin_errors)}`);
-  if (session.isError) failures.push(`session ended in error (exit ${session.exitCode}): ${session.result.slice(0, 300)} ${session.stderr?.slice(0, 300) ?? ""}`);
+  if (session.isError) failures.push(`session ended in error (exit ${session.exitCode}, ${session.subtype}): ${session.result.slice(0, 300)} ${session.stderr?.slice(0, 300) ?? ""}`);
+  failures.context = `${session.subtype} after ${session.turns} turns, ${session.tools.length} tool calls, log ${session.log}; result: ${session.result.slice(0, 400).replace(/\s+/g, " ")}`;
 }
 
 const CASES = {
@@ -189,6 +197,6 @@ for (const name of selected) {
   try { failures = definition.run(); } catch (error) { failures = [`threw: ${error.message}`]; }
   const seconds = ((Date.now() - started) / 1000).toFixed(1);
   if (failures.length === 0) console.log(`ok   ${name} (${seconds}s)`);
-  else { failed += 1; console.log(`FAIL ${name} (${seconds}s)`); for (const failure of failures) console.log(`     - ${failure}`); }
+  else { failed += 1; console.log(`FAIL ${name} (${seconds}s)`); for (const failure of failures) console.log(`     - ${failure}`); if (failures.context) console.log(`     context: ${failures.context}`); }
 }
 process.exit(failed === 0 ? 0 : 1);

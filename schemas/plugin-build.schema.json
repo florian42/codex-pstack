@@ -185,6 +185,58 @@
       },
       "description": "Canonical files copied into a generated skill's references directory."
     },
+    "copiedAgents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "destination", "name"],
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "$ref": "#/$defs/relativePath",
+            "description": "Canonical agent file to copy, relative to sourceRoot."
+          },
+          "destination": {
+            "type": "string",
+            "pattern": "^agents/[^/]+\\.md$",
+            "description": "Destination inside the generated distribution; must land in agents/."
+          },
+          "name": {
+            "$ref": "#/$defs/slug",
+            "description": "Frontmatter name the copy is renamed to; must equal its file slug."
+          },
+          "removeFrontmatter": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/nonEmptyString" },
+            "uniqueItems": true,
+            "description": "Frontmatter keys dropped from the copy."
+          },
+          "frontmatter": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/$defs/nonEmptyString" },
+            "description": "Frontmatter keys injected into, or overridden on, the copy."
+          }
+        }
+      },
+      "description": "Canonical agents copied into the generated distribution's agents directory."
+    },
+    "cliValidate": {
+      "type": "object",
+      "required": ["command", "args"],
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "$ref": "#/$defs/nonEmptyString",
+          "description": "Platform CLI run against the generated tree when it is installed."
+        },
+        "args": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "description": "Arguments before the validated path."
+        }
+      },
+      "description": "Optional platform CLI validation step, skipped when the CLI is absent."
+    },
     "platformTermAllowlist": {
       "type": "array",
       "items": {
