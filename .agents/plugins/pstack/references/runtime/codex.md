@@ -16,6 +16,13 @@ authoritative; do not assume a desktop-only tool exists in CLI or cloud tasks.
 | Select a model role | Prefer the parent task's configured model. Pass an explicit model only when the current Codex capability advertises that exact model and the role benefits from an override. Cursor model files and slugs are ignored. If a requested model is unavailable, inherit the parent rather than translating names by guesswork. |
 | Verify in a browser | Use the installed in-app Browser control skill when available. Otherwise use a repository-owned Playwright or CDP harness. If neither can drive the required surface, report browser verification as blocked. Screenshots without the preceding interaction and resulting state are not proof. |
 
+## Unsupported Poteto Mode routes in the first Codex release
+
+`autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`, `eval`,
+`multi-phase-plan`, `session-pickup`, `shipping`, and `worktree-cleanup` are
+unsupported. The Codex distribution replaces each with an explicit stop page.
+`orchestrate` is supported through the `codex-local-session` profile.
+
 ## Codex exclusions in the first release
 
 Codex does not package Cursor agents, Benny, Cursor routines, Cursor transcript

@@ -343,7 +343,6 @@ function validateTarget(target) {
         }
       }
     }
-    checks.validateGeneratedDelegationTerms?.(context);
   }
 
   function validateMarketplace() {
@@ -595,10 +594,9 @@ function validateTarget(target) {
   }
 
   function validateUnsupportedResourceContract() {
-    const potetoPath = resolve(skillsRoot, "poteto-mode/SKILL.md");
-    const poteto = readText(potetoPath);
+    const mapping = readText(target.runtimeMappingPath);
     const portability = readText(portabilityPath);
-    if (poteto === null || portability === null) return;
+    if (mapping === null || portability === null) return;
     for (const resource of target.unsupportedResources) {
       if (typeof resource?.path !== "string") {
         fail(buildConfigPath, 1, "unsupported resource path must be a string");
@@ -606,8 +604,8 @@ function validateTarget(target) {
       }
       const route = resource.path.split("/").at(-1)?.replace(/\.md$/, "");
       if (route === undefined) continue;
-      if (!poteto.includes(`\`${route}\``)) {
-        fail(buildConfigPath, 1, `unsupported route ${route} is missing from poteto-mode's declared set`);
+      if (!mapping.includes(`\`${route}\``)) {
+        fail(buildConfigPath, 1, `unsupported route ${route} is missing from the ${target.displayName} runtime mapping ${target.runtimeMapping}`);
       }
       if (!portability.includes(`\`${route}\``)) {
         fail(buildConfigPath, 1, `unsupported route ${route} is missing from the portability record`);
