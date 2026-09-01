@@ -89,17 +89,19 @@ codex plugin add pstack@codex-pstack
 When developing locally, regenerate the install tree before reinstalling:
 
 ```bash
-node scripts/generate-codex-pstack.mjs
-node scripts/validate-codex-pstack.mjs
+node scripts/generate-plugin.mjs --target codex
+node scripts/validate-plugin.mjs --all
 codex plugin add pstack@codex-pstack
 ```
 
 ### Generate and validate a change
 
-Run the standalone compatibility validator from the repository root:
+Run the standalone compatibility validator for every target from the
+repository root (`scripts/validate-codex-pstack.mjs` remains as a shim for the
+Codex target alone):
 
 ```bash
-node scripts/validate-codex-pstack.mjs
+node scripts/validate-plugin.mjs --all
 ```
 
 The validator uses Node built-ins only. It checks the source and generated
@@ -135,5 +137,6 @@ surface, prompt, result, and evidence for each check:
 
 For every upstream pstack sync, follow the evergreen [Codex maintenance
 contract](https://github.com/florian42/codex-pstack/issues/1): review the pstack
-diff, regenerate, validate, reinstall, use a fresh task for the smoke test, and
-confirm the existing Cursor package still behaves as before.
+diff, regenerate and validate every target, reinstall, use a fresh task for the
+smoke test, and confirm the existing Cursor and [Claude Code](claude-code.md)
+packages still behave as before.
