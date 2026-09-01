@@ -21,14 +21,20 @@ permissions, or excluded for the active model does not exist for this mapping.
 
 `autopilot-full`, `autopilot-stack`, and `shipping` depend on Graphite stack
 delivery. `eval` and `session-pickup` depend on an authorized transcript source.
-`babysit`, `multi-phase-plan`, and `worktree-cleanup` depend on utilities that are
-not yet packaged for this runtime. The Claude Code distribution replaces each
-with an explicit stop page. `poteto-mode` stops before entering them and never
-reports their result as successful.
+Those five are the only unsupported routes. The Claude Code distribution
+replaces each with an explicit stop page. `poteto-mode` stops before entering
+them and never reports their result as successful.
 
 `autonomous-run` is supported: its only runtime dependency is a recurring wake,
-which `/loop` provides. `orchestrate` is supported through the
-`claude-local-session` profile in the [Orchestrate mapping](orchestrate-claude-code.md).
+which `/loop` provides. `babysit` is supported through the packaged `watch-pr`
+utility at `skills/poteto-mode/scripts/watch-pr/watch-pr`, rearmed under
+`/loop` for `drive` and `background`. `worktree-cleanup` is supported through
+the packaged audit script at `skills/poteto-mode/scripts/worktree-audit.sh`;
+its `--transcripts` argument is optional and stays unused unless the mapping
+provides an authorized transcript source. `multi-phase-plan` is supported
+through the packaged plan checker at
+`skills/poteto-mode/scripts/check-plan.mjs`. `orchestrate` is supported through
+the `claude-local-session` profile in the [Orchestrate mapping](orchestrate-claude-code.md).
 
 ## Claude Code exclusions in the first release
 

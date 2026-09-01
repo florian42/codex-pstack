@@ -74,11 +74,15 @@ release has these limits:
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autopilot-full`, `autopilot-stack`,
-  `shipping`, `eval`, or `session-pickup`. The first three depend on Graphite
-  stack delivery; the last two depend on an authorized transcript source.
-  `babysit`, `multi-phase-plan`, and `worktree-cleanup` also stop until their
-  utilities are packaged for this runtime. It does not substitute a weaker
-  workflow or report success.
+  `shipping`, `eval`, or `session-pickup`, and those five are the only
+  unsupported routes. The first three depend on Graphite stack delivery; the
+  last two depend on an authorized transcript source. It does not substitute a
+  weaker workflow or report success.
+- `babysit`, `worktree-cleanup`, and `multi-phase-plan` are supported. Babysit
+  runs the packaged `watch-pr` utility and rearms it under `/loop`;
+  worktree-cleanup runs the packaged worktree audit script, whose
+  `--transcripts` argument is optional; multi-phase-plan runs the packaged plan
+  checker.
 - `no-comments` delegates to the registered `pstack:comment-sicko` agent, which
   is restricted to read tools. The parent applies accepted comment-only edits
   and validates the scope.
@@ -157,6 +161,9 @@ Expect the supported skill list and exactly two agents, `comment-sicko` and
    absent from the installed cache.
 7. Invoke an unsupported route and confirm it stops explicitly instead of
    reporting success.
+8. Ask Poteto Mode to babysit a pull request and confirm it runs the packaged
+   `watch-pr` launcher from the installed plugin without installing
+   dependencies.
 
 For every upstream pstack sync, follow the evergreen [maintenance
 contract](https://github.com/florian42/codex-pstack/issues/1): review the pstack

@@ -56,16 +56,8 @@
       "reason": "The workflow depends on Graphite stack delivery, which this runtime does not provide."
     },
     {
-      "path": "poteto-mode/playbooks/babysit.md",
-      "reason": "The workflow depends on pull-request monitoring utilities not yet packaged for this runtime."
-    },
-    {
       "path": "poteto-mode/playbooks/eval.md",
       "reason": "The workflow depends on an authorized transcript source, which this runtime does not provide."
-    },
-    {
-      "path": "poteto-mode/playbooks/multi-phase-plan.md",
-      "reason": "The workflow depends on phase-tracking utilities not yet packaged for this runtime."
     },
     {
       "path": "poteto-mode/playbooks/session-pickup.md",
@@ -74,16 +66,21 @@
     {
       "path": "poteto-mode/playbooks/shipping.md",
       "reason": "The workflow depends on Graphite stack delivery, which this runtime does not provide."
-    },
-    {
-      "path": "poteto-mode/playbooks/worktree-cleanup.md",
-      "reason": "The workflow depends on worktree bookkeeping utilities not yet packaged for this runtime."
     }
   ],
   "runtimeResources": [
     "poteto-mode/scripts/orch/session-orch.ts",
     "poteto-mode/scripts/orch/journal.ts",
     "poteto-mode/scripts/orch/program.ts",
+    "poteto-mode/scripts/watch-pr/cli.ts",
+    "poteto-mode/scripts/watch-pr/github.ts",
+    "poteto-mode/scripts/watch-pr/policy.ts",
+    "poteto-mode/scripts/watch-pr/render.ts",
+    "poteto-mode/scripts/watch-pr/types.ts",
+    "poteto-mode/scripts/watch-pr/watch-pr",
+    "poteto-mode/scripts/watch-pr/tsconfig.json",
+    "poteto-mode/scripts/check-plan.mjs",
+    "poteto-mode/scripts/worktree-audit.sh",
     "show-me-your-work/scripts/log.sh"
   ],
   "copiedSkillResources": [],

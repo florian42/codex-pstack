@@ -155,6 +155,25 @@ const CASES = {
       return failures;
     },
   },
+  "babysit-preflight": {
+    model: true,
+    run() {
+      const failures = [];
+      const cwd = fixture("tiny-repo");
+      const session = claude("/pstack:poteto-mode babysit pull request 1 of this repository. First show me the exact watch-pr command you would run and its --help output, then stop without watching.", {
+        cwd, maxTurns: 20, allowed: ["Read", "Glob", "Grep", "Bash(bun *)", "Bash(ls *)", "Bash(cat *)"],
+      });
+      assertPluginLoaded(session, failures);
+      const commands = bashCommands(session.tools);
+      const watchPrDir = join(options.pluginDir, "skills/poteto-mode/scripts/watch-pr");
+      const watcher = commands.filter((command) => command.includes(watchPrDir) && /[/\s](?:\.\/)?(?:watch-pr|cli\.ts)(?:\s|$)/.test(command));
+      if (!watcher.length) failures.push(`no Bash call invoked the packaged watch-pr launcher or cli.ts under ${watchPrDir}; bash calls: ${commands.join(" | ") || "none"}`);
+      const installs = commands.filter((command) => /\b(?:bun|npm) install\b/.test(command));
+      if (installs.length) failures.push(`dependency install was attempted: ${installs.join(" | ")}`);
+      rmSync(cwd, { recursive: true, force: true });
+      return failures;
+    },
+  },
   "no-comments-delegation": {
     model: true,
     run() {

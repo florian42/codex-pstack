@@ -78,9 +78,12 @@ one integration writer, and conservative restart recovery.
 
 `autopilot-full`, `autopilot-stack`, and `shipping` depend on Graphite stack
 delivery. `eval` and `session-pickup` depend on an authorized transcript source.
-`babysit`, `multi-phase-plan`, and `worktree-cleanup` wait on utilities not yet
-packaged for this runtime. `autonomous-run` is supported through `/loop`, and
-`orchestrate` through the `claude-local-session` profile.
+Those five are the only unsupported routes. `babysit` is supported through the
+packaged `watch-pr` utility plus `/loop`, `worktree-cleanup` through the
+packaged worktree audit script whose `--transcripts` argument is optional, and
+`multi-phase-plan` through the packaged plan checker. `autonomous-run` is
+supported through `/loop`, and `orchestrate` through the
+`claude-local-session` profile.
 
 Packaged source may still contain excluded agents, automations, and utility files
 for Cursor. No runtime mapping, supported skill, or generated playbook may invoke
