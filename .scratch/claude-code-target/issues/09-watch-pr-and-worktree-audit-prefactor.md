@@ -4,9 +4,9 @@
 
 **Blocked by:** None — can start immediately (prefactor; parallel to 01–06).
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `bun test watch-pr` passes with identical assertions; a diff of command help output is reviewed for parity
-- [ ] The relative-import closure of `watch-pr` contains no third-party module and no test file
-- [ ] Worktree audit runs on a host with no Cursor transcript directory and exits 0
-- [ ] Cursor behavior of both utilities is unchanged; recorded in the maintenance contract as an upstream-touching change
+- [x] `bun test watch-pr` passes with identical assertions; a diff of command help output is reviewed for parity
+- [x] The relative-import closure of `watch-pr` contains no third-party module and no test file
+- [x] Worktree audit runs on a host with no Cursor transcript directory and exits 0
+- [x] Cursor behavior of both utilities is unchanged; recorded in the maintenance contract as an upstream-touching change

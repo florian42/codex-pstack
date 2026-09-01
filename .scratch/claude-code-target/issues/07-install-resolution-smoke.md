@@ -4,9 +4,9 @@
 
 **Blocked by:** 06 — Land the Claude Code target.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Script exits non-zero if any omitted skill appears or the agent set differs
-- [ ] Script skips with a clear message when a CLI is absent, and CI installs the Claude Code CLI so it does not skip there
-- [ ] Runs without any model call or API key
-- [ ] Workflow job `install-smoke` gates pull requests and is documented in the Claude Code guide's maintenance section
+- [x] Script exits non-zero if any omitted skill appears or the agent set differs
+- [x] Script skips with a clear message when a CLI is absent, and CI installs the Claude Code CLI so it does not skip there
+- [x] Runs without any model call or API key
+- [x] Workflow job `install-smoke` gates pull requests and is documented in the Claude Code guide's maintenance section

@@ -4,10 +4,10 @@
 
 **Blocked by:** 06 — Land the Claude Code target.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Each case asserts on observed tool calls (Agent with `subagent_type`, absence of `gh pr merge`/`gt`/push) parsed from `stream-json`, never on prose alone
-- [ ] Harness fails loudly if the plugin did not load (system init reports plugin errors)
-- [ ] Documented that bare mode needs an API key; non-bare needs an OAuth token with pinned settings
-- [ ] Workflow has a `schedule` trigger and a `behavior-smoke` job with cancel-in-progress concurrency that never gates ordinary pull requests
-- [ ] Eval suite self-tests enablement and exits 0 with a skip message when gated
+- [x] Each case asserts on observed tool calls (Agent with `subagent_type`, absence of `gh pr merge`/`gt`/push) parsed from `stream-json`, never on prose alone
+- [x] Harness fails loudly if the plugin did not load (system init reports plugin errors)
+- [x] Documented that bare mode needs an API key; non-bare needs an OAuth token with pinned settings
+- [x] Workflow has a `schedule` trigger and a `behavior-smoke` job with cancel-in-progress concurrency that never gates ordinary pull requests
+- [x] Eval suite self-tests enablement and exits 0 with a skip message when gated

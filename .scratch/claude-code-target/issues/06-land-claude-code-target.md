@@ -4,14 +4,14 @@
 
 **Blocked by:** 03 — Vocabulary term scan; 04 — Schemas and version parity; 05 — Claude Code runtime mapping.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `node scripts/validate-plugin.mjs --all` passes; `--target claude-code --check` reports the tree current
-- [ ] `claude plugin validate --strict` passes on the generated tree and on the root marketplace
-- [ ] `claude --plugin-dir plugins/claude-code/pstack plugin details pstack` lists 41 skills and exactly the agents `comment-sicko` and `poteto-agent`
-- [ ] The four omitted skills, all `*.test.ts` files, `bootstrap.ts`, `package.json`, `bun.lock`, and Benny automations are absent from the generated tree
-- [ ] Each stop page reads "Unsupported on Claude Code" and links the Claude Code mapping
-- [ ] Claude Code target bans cursor-exclusive and codex-exclusive vocabularies and the scan passes
-- [ ] `git diff --exit-code .agents/plugins/pstack` is clean
-- [ ] Guide covers install, first use, boundary (five routes reduce to Graphite and transcript access), maintenance, and a numbered fresh-session smoke checklist
-- [ ] Version parity holds across all three manifests; marketplace entry omits `version`
+- [x] `node scripts/validate-plugin.mjs --all` passes; `--target claude-code --check` reports the tree current
+- [x] `claude plugin validate --strict` passes on the generated tree and on the root marketplace
+- [x] `claude --plugin-dir plugins/claude-code/pstack plugin details pstack` lists 41 skills and exactly the agents `comment-sicko` and `poteto-agent`
+- [x] The four omitted skills, all `*.test.ts` files, `bootstrap.ts`, `package.json`, `bun.lock`, and Benny automations are absent from the generated tree
+- [x] Each stop page reads "Unsupported on Claude Code" and links the Claude Code mapping
+- [x] Claude Code target bans cursor-exclusive and codex-exclusive vocabularies and the scan passes
+- [x] `git diff --exit-code .agents/plugins/pstack` is clean
+- [x] Guide covers install, first use, boundary (five routes reduce to Graphite and transcript access), maintenance, and a numbered fresh-session smoke checklist
+- [x] Version parity holds across all three manifests; marketplace entry omits `version`

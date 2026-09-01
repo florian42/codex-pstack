@@ -4,11 +4,11 @@
 
 **Blocked by:** None — can start immediately.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `git diff --exit-code .agents/plugins/pstack` is clean after regenerating with the new generator
-- [ ] Both new entry points and both shims exit 0 on the current tree with the same pass messages as today
-- [ ] The single shared portability parser uses the validator's alias map, reports duplicates, and hard-errors on an unrecognized status cell; the generator no longer has its own parser
-- [ ] Mutating one generated file makes the validator fail with the same `path:line: message` shape as today
-- [ ] CI workflow path filters include the shared core directory and the new entry points
-- [ ] The Codex guide's documented commands still run unchanged
+- [x] `git diff --exit-code .agents/plugins/pstack` is clean after regenerating with the new generator
+- [x] Both new entry points and both shims exit 0 on the current tree with the same pass messages as today
+- [x] The single shared portability parser uses the validator's alias map, reports duplicates, and hard-errors on an unrecognized status cell; the generator no longer has its own parser
+- [x] Mutating one generated file makes the validator fail with the same `path:line: message` shape as today
+- [x] CI workflow path filters include the shared core directory and the new entry points
+- [x] The Codex guide's documented commands still run unchanged

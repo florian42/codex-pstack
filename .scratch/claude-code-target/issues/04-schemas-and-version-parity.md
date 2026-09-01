@@ -4,10 +4,10 @@
 
 **Blocked by:** 01 — Extract a shared multi-target build core.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Ten deliberate mutations of the Codex manifest (unknown key, bad semver, forbidden `agents` key, missing `interface.capabilities`, four-item `defaultPrompt`, non-https homepage, and so on) each fail validation
-- [ ] N-way parity reports every mismatched manifest with its line; passes on the current tree
-- [ ] `set-version` leaves the tab-indented Cursor manifest tab-indented and the two-space manifests two-space
-- [ ] Build config schema rejects a copied-resource entry with an extra key or a destination outside a skill's `references/` directory
-- [ ] CI installs the schema validator dependencies once and runs the target table
+- [x] Ten deliberate mutations of the Codex manifest (unknown key, bad semver, forbidden `agents` key, missing `interface.capabilities`, four-item `defaultPrompt`, non-https homepage, and so on) each fail validation
+- [x] N-way parity reports every mismatched manifest with its line; passes on the current tree
+- [x] `set-version` leaves the tab-indented Cursor manifest tab-indented and the two-space manifests two-space
+- [x] Build config schema rejects a copied-resource entry with an extra key or a destination outside a skill's `references/` directory
+- [x] CI installs the schema validator dependencies once and runs the target table

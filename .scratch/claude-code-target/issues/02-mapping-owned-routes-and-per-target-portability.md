@@ -4,10 +4,10 @@
 
 **Blocked by:** 01 — Extract a shared multi-target build core.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] The Poteto Mode skill edit is a single replaced paragraph with no reflow of neighboring text
-- [ ] Validator fails if a route in the Codex build config is missing from the Codex mapping's route list, and passes on the current set
-- [ ] Portability parser resolves the `Codex` column by header; removing a column header fails validation with a clear message
-- [ ] `git diff --exit-code .agents/plugins/pstack` is clean apart from the regenerated Poteto Mode skill and runtime references, and the freshness check passes after regeneration
-- [ ] The maintenance-contract note in the Codex guide records that this canonical edit is fork-owned
+- [x] The Poteto Mode skill edit is a single replaced paragraph with no reflow of neighboring text
+- [x] Validator fails if a route in the Codex build config is missing from the Codex mapping's route list, and passes on the current set
+- [x] Portability parser resolves the `Codex` column by header; removing a column header fails validation with a clear message
+- [x] `git diff --exit-code .agents/plugins/pstack` is clean apart from the regenerated Poteto Mode skill and runtime references, and the freshness check passes after regeneration
+- [x] The maintenance-contract note in the Codex guide records that this canonical edit is fork-owned

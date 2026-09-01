@@ -4,10 +4,10 @@
 
 **Blocked by:** 01 — Extract a shared multi-target build core.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Codex validation passes on the current tree with the vocabulary-driven scan
-- [ ] Injecting the word `Cursor`, `spawn_agent`, or `subagent_type` into a generated Codex skill each produces one scan failure naming the file and line
-- [ ] Injecting `spawn_agent` into a generated skill of a target that bans codex-exclusive fails, while `subagent_type` passes for a target that does not ban cursor-shared-with-claude (covered by a unit-level check of the resolver)
-- [ ] A malformed allowlist entry fails as a config error, not as a stale entry
-- [ ] Regular expressions are code literals in the shared core, not strings in JSON
+- [x] Codex validation passes on the current tree with the vocabulary-driven scan
+- [x] Injecting the word `Cursor`, `spawn_agent`, or `subagent_type` into a generated Codex skill each produces one scan failure naming the file and line
+- [x] Injecting `spawn_agent` into a generated skill of a target that bans codex-exclusive fails, while `subagent_type` passes for a target that does not ban cursor-shared-with-claude (covered by a unit-level check of the resolver)
+- [x] A malformed allowlist entry fails as a config error, not as a stale entry
+- [x] Regular expressions are code literals in the shared core, not strings in JSON

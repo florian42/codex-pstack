@@ -4,10 +4,10 @@
 
 **Blocked by:** 06 — Land the Claude Code target; 09 — `watch-pr` and worktree audit prefactor.
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Generated tree contains the real playbooks for the three routes and no stop page for them
-- [ ] Runtime resources pass the import-closure, mode, and no-test-file checks
-- [ ] Supported-playbook scan passes with the multi-phase plan edit, and the Codex tree still renders that route as a stop page
-- [ ] Behavior smoke gains a case that a babysit prompt invokes the packaged `watch-pr` entry without attempting a dependency install
-- [ ] Guide's boundary section now lists only the five Graphite- and transcript-dependent routes
+- [x] Generated tree contains the real playbooks for the three routes and no stop page for them
+- [x] Runtime resources pass the import-closure, mode, and no-test-file checks
+- [x] Supported-playbook scan passes with the multi-phase plan edit, and the Codex tree still renders that route as a stop page
+- [x] Behavior smoke gains a case that a babysit prompt invokes the packaged `watch-pr` entry without attempting a dependency install
+- [x] Guide's boundary section now lists only the five Graphite- and transcript-dependent routes

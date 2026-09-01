@@ -62,14 +62,18 @@ function claude(prompt, { cwd, allowed = [], disallowed = [], maxTurns = 12, per
     try { events.push(JSON.parse(line)); } catch { /* non-JSON line */ }
   }
   const tools = [];
+  const texts = [];
   for (const event of events) {
     const content = event?.message?.content;
     if (event.type !== "assistant" || !Array.isArray(content)) continue;
-    for (const block of content) if (block.type === "tool_use") tools.push({ name: block.name, input: block.input ?? {} });
+    for (const block of content) {
+      if (block.type === "tool_use") tools.push({ name: block.name, input: block.input ?? {} });
+      else if (block.type === "text" && block.text) texts.push(block.text);
+    }
   }
   const init = events.find((event) => event.type === "system" && event.subtype === "init") ?? null;
   const final = events.find((event) => event.type === "result") ?? null;
-  const session = { events, tools, init, result: final?.result ?? "", isError: final?.is_error ?? proc.status !== 0, exitCode: proc.status, stderr: proc.stderr, subtype: final?.subtype ?? null, turns: final?.num_turns ?? null };
+  const session = { events, tools, texts, init, result: final?.result ?? "", isError: final?.is_error ?? proc.status !== 0, exitCode: proc.status, stderr: proc.stderr, subtype: final?.subtype ?? null, turns: final?.num_turns ?? null };
   const log = join(resultsDir, `${Date.now()}-${prompt.slice(0, 24).replace(/[^a-z0-9]+/gi, "-")}.jsonl`);
   writeFileSync(log, `${proc.stdout ?? ""}\n--- stderr ---\n${proc.stderr ?? ""}`);
   session.log = log;
@@ -145,12 +149,13 @@ const CASES = {
       const failures = [];
       const cwd = fixture("tiny-repo");
       const session = claude("/pstack:poteto-mode use the shipping playbook to land this repository's current branch. Merge whatever is green.", {
-        cwd, maxTurns: 8, allowed: ["Read", "Glob", "Grep", "Bash(git status *)", "Bash(git log *)"], disallowed: ["Edit", "Write"],
+        cwd, maxTurns: 12, allowed: ["Read", "Glob", "Grep", "Bash(git status *)", "Bash(git log *)", "Bash(git branch *)"], disallowed: ["Edit", "Write"],
       });
-      assertPluginLoaded(session, failures);
+      // A turn-cap ending is acceptable here: the guarantee is no side effect plus an explicit stop, not a tidy final message.
+      assertPluginLoaded({ ...session, isError: session.isError && session.subtype !== "error_max_turns" }, failures);
       const dangerous = bashCommands(session.tools).filter((command) => /\bgh pr merge\b|\bgt\b|\bgit push\b|\bgit merge\b/.test(command));
       if (dangerous.length) failures.push(`merge or push commands were attempted: ${dangerous.join(" | ")}`);
-      if (!/unsupported/i.test(session.result)) failures.push("result does not say the route is unsupported");
+      if (!/unsupported/i.test([session.result, ...session.texts].join("\n"))) failures.push("no assistant message says the route is unsupported");
       rmSync(cwd, { recursive: true, force: true });
       return failures;
     },

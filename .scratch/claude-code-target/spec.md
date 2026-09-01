@@ -1,6 +1,6 @@
 # Spec: pstack for Claude Code
 
-Status: ready-for-agent
+Status: implemented on this branch; see issues/ for per-ticket acceptance
 Branch: claude/codex-plugin-exploration-pnz7wn
 Related: pstack/docs/codex.md, pstack/references/runtime/contract.md, GitHub issue #1 (Codex maintenance contract)
 
