@@ -29,6 +29,24 @@ function requireString(config, key, configPath) {
   return value;
 }
 
+function requireObjectArray(config, key, keys, configPath) {
+  const value = config[key] ?? [];
+  if (!Array.isArray(value)) {
+    throw new Error(`${configPath}: ${key} must be an array`);
+  }
+  for (const [index, entry] of value.entries()) {
+    if (entry === null || Array.isArray(entry) || typeof entry !== "object") {
+      throw new Error(`${configPath}: ${key}[${index}] must be an object`);
+    }
+    for (const field of keys) {
+      if (typeof entry[field] !== "string" || entry[field].trim() === "") {
+        throw new Error(`${configPath}: ${key}[${index}].${field} must be a non-empty string`);
+      }
+    }
+  }
+  return value;
+}
+
 function requireStringArray(config, key, configPath) {
   const value = config[key];
   if (!Array.isArray(value) || value.some((entry) => typeof entry !== "string")) {
@@ -146,6 +164,11 @@ export function loadTarget(name, root = repositoryRoot()) {
     unsupportedResources: config.unsupportedResources ?? [],
     runtimeResources: config.runtimeResources ?? [],
     copiedSkillResources: config.copiedSkillResources,
-    platformTermAllowlist: config.platformTermAllowlist ?? [],
+    platformTermAllowlist: requireObjectArray(
+      config,
+      "platformTermAllowlist",
+      ["path", "match"],
+      configRelative,
+    ),
   };
 }

@@ -7,6 +7,7 @@ import { spawnSync } from "node:child_process";
 import { parseFrontmatter } from "./lib/frontmatter.mjs";
 import { toPosix, walkFiles, walkFilesIfPresent } from "./lib/fs.mjs";
 import { readPortability } from "./lib/portability.mjs";
+import { isSemver, MANIFESTS, versionParityFailures } from "./lib/manifest.mjs";
 import { loadTarget, repositoryRoot, targetNames } from "./lib/targets.mjs";
 import { codexChecks } from "./lib/targets/codex.mjs";
 import { resolveVocabularies } from "./lib/vocabulary.mjs";
@@ -33,6 +34,59 @@ function parseArguments(argv) {
     if (target === undefined) throw new Error("--target requires a target name");
   }
   return targets;
+}
+
+/**
+ * Cross-target version parity over every plugin manifest in the repository,
+ * with the Cursor manifest as the reference. Runs once per invocation, not per
+ * target: a manifest whose target has no build config yet is still covered.
+ */
+function validateManifestParity(root) {
+  const errors = [];
+  const read = (manifest) => {
+    const path = resolve(root, manifest.path);
+    if (!existsSync(path)) {
+      errors.push(`${manifest.path}:1: ${manifest.label} is missing`);
+      return null;
+    }
+    const text = readFileSync(path, "utf8");
+    try {
+      return { ...manifest, text, value: JSON.parse(text) };
+    } catch (error) {
+      errors.push(`${manifest.path}:1: ${manifest.label} is not valid JSON: ${error.message}`);
+      return null;
+    }
+  };
+  const lineOfVersion = (text) => {
+    const offset = text.indexOf('"version"');
+    return offset === -1 ? 1 : text.slice(0, offset).split("\n").length;
+  };
+
+  const loaded = MANIFESTS.map(read);
+  const reference = loaded.find((manifest) => manifest?.reference);
+  if (reference === undefined) return errors;
+  if (!isSemver(reference.value.version)) {
+    errors.push(
+      `${reference.path}:${lineOfVersion(reference.text)}: version must be strict semantic versioning`,
+    );
+  }
+  const peers = loaded.filter((manifest) => manifest !== null && manifest !== reference);
+  for (const peer of peers) {
+    if (!isSemver(peer.value.version)) {
+      errors.push(
+        `${peer.path}:${lineOfVersion(peer.text)}: version must be strict semantic versioning`,
+      );
+    }
+  }
+  const failures = versionParityFailures(
+    { label: reference.label, version: reference.value.version },
+    peers.map((peer) => ({ label: peer.label, version: peer.value.version, peer })),
+  );
+  for (const failure of failures) {
+    const peer = peers.find((candidate) => candidate.label === failure.label);
+    errors.push(`${peer.path}:${lineOfVersion(peer.text)}: ${failure.message}`);
+  }
+  return errors;
 }
 
 function validateTarget(target) {
@@ -634,6 +688,12 @@ function main(argv) {
   const requested = parseArguments(argv);
   const root = repositoryRoot();
   let status = 0;
+  const parityErrors = validateManifestParity(root);
+  if (parityErrors.length > 0) {
+    for (const error of parityErrors) console.error(`ERROR ${error}`);
+    console.error(`\nManifest version parity failed with ${parityErrors.length} error(s).`);
+    status = 1;
+  }
   for (const name of requested) {
     const target = loadTarget(name, root);
     const { errors, skillCount, portabilityCount } = validateTarget(target);

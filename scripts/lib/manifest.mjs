@@ -23,3 +23,17 @@ export function versionParityFailures(reference, manifests) {
   }
   return failures;
 }
+
+/**
+ * Every plugin manifest in the repository, in the order they are reported.
+ * The first entry is the reference every other manifest's version must match.
+ *
+ * Paths are relative to the repository root. This list is deliberately not
+ * derived from the target registry: the Claude Code manifest exists before its
+ * build config does.
+ */
+export const MANIFESTS = [
+  { label: "Cursor manifest", path: "pstack/.cursor-plugin/plugin.json", reference: true },
+  { label: "Codex manifest", path: "pstack/.codex-plugin/plugin.json" },
+  { label: "Claude Code manifest", path: "pstack/.claude-plugin/plugin.json" },
+];

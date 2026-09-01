@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/florian42/codex-pstack/schemas/claude-plugin/plugin.json",
+  "title": "Claude Code Plugin Manifest",
+  "description": "Schema for .claude-plugin/plugin.json — permissive to the fields Claude Code documents, strict about unknown keys so a typo fails validation.",
+  "type": "object",
+  "required": ["name"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Optional pointer to this schema."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$",
+      "description": "Unique plugin identifier in kebab-case."
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Human-readable display name."
+    },
+    "version": {
+      "$ref": "#/$defs/semver",
+      "description": "Strict semantic version, kept in parity with the Cursor manifest."
+    },
+    "description": {
+      "type": "string",
+      "description": "Short description of what the plugin does."
+    },
+    "author": {
+      "$ref": "#/$defs/author",
+      "description": "The plugin author."
+    },
+    "homepage": {
+      "type": "string",
+      "description": "URL to the plugin's homepage."
+    },
+    "repository": {
+      "type": "string",
+      "description": "URL to the plugin's source repository."
+    },
+    "license": {
+      "type": "string",
+      "description": "SPDX license identifier."
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Keywords for discovery and search."
+    },
+    "skills": {
+      "$ref": "#/$defs/pathOrPaths",
+      "description": "Path(s) to skill directories or files; defaults to ./skills/."
+    },
+    "agents": {
+      "$ref": "#/$defs/pathOrPaths",
+      "description": "Path(s) to agent definition files; defaults to the agents/ directory."
+    },
+    "commands": {
+      "$ref": "#/$defs/pathOrPaths",
+      "description": "Path(s) to command files; defaults to the commands/ directory."
+    },
+    "hooks": {
+      "oneOf": [{ "type": "string" }, { "type": "object" }],
+      "description": "Path to a hooks configuration file, or an inline hooks object."
+    },
+    "mcpServers": {
+      "oneOf": [{ "type": "string" }, { "type": "object" }],
+      "description": "Path to an MCP server configuration file, or an inline configuration object."
+    },
+    "lspServers": {
+      "oneOf": [{ "type": "string" }, { "type": "object" }],
+      "description": "Path to an LSP server configuration file, or an inline configuration object."
+    },
+    "outputStyles": {
+      "$ref": "#/$defs/pathOrPaths",
+      "description": "Path(s) to output style definitions."
+    },
+    "userConfig": {
+      "type": "object",
+      "description": "JSON Schema describing user-configurable plugin settings."
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "description": "Other plugins this plugin depends on, keyed by plugin name."
+    },
+    "experimental": {
+      "type": "object",
+      "description": "Opt-in experimental configuration."
+    },
+    "defaultEnabled": {
+      "type": "boolean",
+      "description": "Whether the plugin is enabled by default after installation."
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Arbitrary additional metadata."
+    }
+  },
+  "$defs": {
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "email": { "type": "string", "format": "email" },
+        "url": { "type": "string" }
+      }
+    },
+    "pathOrPaths": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "Strict semantic version \"X.Y.Z\" with optional prerelease and build metadata."
+    }
+  }
+}

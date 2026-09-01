@@ -18,6 +18,8 @@ on:
       - "scripts/validate-plugin.mjs"
       - "scripts/generate-codex-pstack.mjs"
       - "scripts/validate-codex-pstack.mjs"
+      - "scripts/set-version.mjs"
+      - "scripts/test/**"
 
 jobs:
   validate:
@@ -31,6 +33,9 @@ jobs:
 
       - name: Validate pstack target compatibility
         run: node scripts/validate-plugin.mjs --all
+
+      - name: Run unit tests
+        run: node --test scripts/test/*.test.mjs
 
       - name: Install dependencies
         run: npm install --no-save ajv ajv-formats

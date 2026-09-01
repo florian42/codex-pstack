@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/florian42/codex-pstack/schemas/codex-plugin/plugin.json",
+  "title": "Codex Plugin Manifest",
+  "description": "Schema for pstack/.codex-plugin/plugin.json — the Codex release manifest. Encodes the contract the Codex distribution ships under: no component registration beyond skills, and a complete storefront interface block.",
+  "type": "object",
+  "required": [
+    "name",
+    "version",
+    "description",
+    "skills",
+    "author",
+    "homepage",
+    "repository",
+    "license",
+    "interface"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Optional stable plugin identifier."
+    },
+    "name": {
+      "const": "pstack",
+      "description": "Plugin identifier; the Codex release ships as pstack."
+    },
+    "version": {
+      "$ref": "#/$defs/semver",
+      "description": "Strict semantic version, kept in parity with the Cursor manifest."
+    },
+    "description": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Short description of what the plugin does."
+    },
+    "skills": {
+      "const": "./skills/",
+      "description": "Skills directory pointer; the Codex release registers only the skill tree."
+    },
+    "author": {
+      "$ref": "#/$defs/author",
+      "description": "The plugin author."
+    },
+    "homepage": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "Absolute HTTPS URL of the plugin's homepage."
+    },
+    "repository": {
+      "$ref": "#/$defs/httpsUrl",
+      "description": "Absolute HTTPS URL of the plugin's source repository."
+    },
+    "license": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "SPDX license identifier (e.g. \"MIT\")."
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/nonEmptyString" },
+      "description": "Keywords for discovery and search."
+    },
+    "interface": {
+      "$ref": "#/$defs/interface",
+      "description": "Storefront presentation block."
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "pattern": "^https://",
+      "description": "Absolute HTTPS URL."
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$",
+      "description": "Strict semantic version \"X.Y.Z\" with optional prerelease and build metadata."
+    },
+    "author": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "email": { "type": "string", "format": "email" },
+        "url": { "type": "string" }
+      }
+    },
+    "defaultPrompt": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "\\S"
+      },
+      "description": "One to three suggested prompts of at most 128 characters each."
+    },
+    "interface": {
+      "type": "object",
+      "required": [
+        "displayName",
+        "shortDescription",
+        "longDescription",
+        "developerName",
+        "category",
+        "capabilities"
+      ],
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["defaultPrompt"] },
+        { "required": ["default_prompt"] }
+      ],
+      "properties": {
+        "displayName": { "$ref": "#/$defs/nonEmptyString" },
+        "shortDescription": { "$ref": "#/$defs/nonEmptyString" },
+        "longDescription": { "$ref": "#/$defs/nonEmptyString" },
+        "developerName": { "$ref": "#/$defs/nonEmptyString" },
+        "category": { "$ref": "#/$defs/nonEmptyString" },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nonEmptyString" },
+          "description": "Non-empty list of capability labels."
+        },
+        "websiteURL": { "type": "string" },
+        "privacyPolicyURL": { "type": "string" },
+        "termsOfServiceURL": { "type": "string" },
+        "brandColor": { "type": "string" },
+        "composerIcon": { "type": "string" },
+        "logo": { "type": "string" },
+        "logoDark": { "type": "string" },
+        "screenshots": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "defaultPrompt": { "$ref": "#/$defs/defaultPrompt" },
+        "default_prompt": { "$ref": "#/$defs/defaultPrompt" }
+      }
+    }
+  }
+}

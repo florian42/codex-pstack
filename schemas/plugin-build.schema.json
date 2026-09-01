@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/florian42/codex-pstack/schemas/plugin-build.json",
+  "title": "pstack per-target build config",
+  "description": "Schema for a per-target plugin build config (for example .agents/plugins/pstack-build.json), matching what scripts/lib/targets.mjs loadTarget requires.",
+  "type": "object",
+  "required": [
+    "target",
+    "displayName",
+    "sourceRoot",
+    "outputRoot",
+    "manifestSource",
+    "manifestDestination",
+    "referenceManifest",
+    "marketplace",
+    "portabilityRecord",
+    "portabilityColumn",
+    "runtimeMapping",
+    "stopPageTitle",
+    "stopPageMappingLink",
+    "generatedBy",
+    "regenerateCommand",
+    "manifestChecks",
+    "bannedVocabularies",
+    "forbiddenGeneratedDirectories",
+    "requiredSkills",
+    "requiredAgents",
+    "copiedSkillResources"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "target": {
+      "$ref": "#/$defs/slug",
+      "description": "Target name; must equal the key this config is registered under."
+    },
+    "displayName": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Human-readable platform name used in validator messages."
+    },
+    "sourceRoot": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Canonical skill tree root, relative to the repository root."
+    },
+    "outputRoot": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Generated distribution root, relative to the repository root."
+    },
+    "manifestSource": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Hand-written manifest copied into the distribution."
+    },
+    "manifestDestination": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Manifest location inside the generated distribution."
+    },
+    "referenceManifest": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Manifest this target's version is compared against."
+    },
+    "marketplace": {
+      "type": "object",
+      "required": ["path", "name", "pluginName", "sourcePointer"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath",
+          "description": "Marketplace file, relative to the repository root."
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString",
+          "description": "Expected marketplace name."
+        },
+        "pluginName": {
+          "$ref": "#/$defs/nonEmptyString",
+          "description": "Expected single plugin entry name."
+        },
+        "sourcePointer": {
+          "$ref": "#/$defs/nonEmptyString",
+          "description": "Expected marketplace pointer at the generated distribution."
+        }
+      }
+    },
+    "portabilityRecord": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Portability table, relative to sourceRoot."
+    },
+    "portabilityColumn": {
+      "oneOf": [
+        { "$ref": "#/$defs/nonEmptyString" },
+        { "type": "integer", "minimum": 0 }
+      ],
+      "description": "Portability column header name, or a zero-based column index."
+    },
+    "runtimeMapping": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Runtime mapping document, relative to sourceRoot."
+    },
+    "stopPageTitle": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Heading rendered on a generated unsupported-route stop page."
+    },
+    "stopPageMappingLink": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Link from a stop page back to the runtime mapping."
+    },
+    "generatedBy": {
+      "$ref": "#/$defs/relativePath",
+      "description": "Generator recorded in the distribution's provenance file."
+    },
+    "regenerateCommand": {
+      "$ref": "#/$defs/nonEmptyString",
+      "description": "Command a maintainer runs to refresh the distribution."
+    },
+    "manifestChecks": {
+      "$ref": "#/$defs/slug",
+      "description": "Named bundle of target-specific checks in the validator."
+    },
+    "bannedVocabularies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slug" },
+      "uniqueItems": true,
+      "description": "Named vocabularies whose terms must not appear in generated skills."
+    },
+    "forbiddenGeneratedDirectories": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/nonEmptyString" },
+      "uniqueItems": true,
+      "description": "Directory names that must be absent from the generated distribution."
+    },
+    "requiredSkills": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slug" },
+      "uniqueItems": true,
+      "description": "Skill names the platform must discover."
+    },
+    "requiredAgents": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/slug" },
+      "uniqueItems": true,
+      "description": "Agent names the platform must discover."
+    },
+    "unsupportedResources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "$ref": "#/$defs/relativePath",
+            "description": "Resource replaced by a stop page, relative to the skills root."
+          },
+          "reason": {
+            "$ref": "#/$defs/nonEmptyString",
+            "description": "Sentence rendered on the stop page."
+          }
+        }
+      },
+      "description": "Routes replaced by generated stop pages."
+    },
+    "runtimeResources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/relativePath" },
+      "uniqueItems": true,
+      "description": "Script files packaged into the distribution, relative to the skills root."
+    },
+    "copiedSkillResources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source", "destination"],
+        "additionalProperties": false,
+        "properties": {
+          "source": {
+            "$ref": "#/$defs/relativePath",
+            "description": "File to copy, relative to sourceRoot."
+          },
+          "destination": {
+            "type": "string",
+            "pattern": "^skills/[^/.][^/]*/references/[^/]+$",
+            "description": "Destination inside the generated distribution; must land in a skill's references/ directory."
+          }
+        }
+      },
+      "description": "Canonical files copied into a generated skill's references directory."
+    },
+    "platformTermAllowlist": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "match"],
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "$ref": "#/$defs/relativePath",
+            "description": "Generated file the exception applies to, relative to outputRoot."
+          },
+          "match": {
+            "$ref": "#/$defs/nonEmptyString",
+            "description": "Exact matched text the scan may ignore in that file."
+          }
+        }
+      },
+      "description": "Reviewed exact-match exceptions to the platform-term scan."
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))\\S(?:.*\\S)?$",
+      "description": "Normalized relative path that does not escape its root."
+    }
+  }
+}
