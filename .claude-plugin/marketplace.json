@@ -1,0 +1,25 @@
+{
+  "name": "pstack-claude",
+  "owner": {
+    "name": "Florian Schuck",
+    "url": "https://github.com/florian42"
+  },
+  "metadata": {
+    "description": "pstack packaged for Claude Code from the canonical skill tree."
+  },
+  "plugins": [
+    {
+      "name": "pstack",
+      "source": "./plugins/claude-code/pstack",
+      "description": "Rigorous engineering workflows for understanding, designing, implementing, reviewing, and verifying software with agents.",
+      "author": {
+        "name": "Lauren Tan"
+      },
+      "category": "development",
+      "keywords": [
+        "pstack",
+        "poteto-mode"
+      ]
+    }
+  ]
+}
