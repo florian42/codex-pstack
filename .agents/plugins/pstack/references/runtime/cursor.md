@@ -16,6 +16,9 @@ belong here or in a deliberately Cursor-only skill, not in shared workflow prose
 | Select a model role | Read `~/.cursor/rules/pstack-models.mdc` when present. Otherwise use the defaults documented by the calling skill. Validate every explicit slug against the current `Task` tool before spawning. |
 | Verify in a browser | Use `cursor-team-kit`'s `control-ui` when installed, or the repository's own Playwright/CDP harness. Use `control-cli` for CLI and TUI surfaces. |
 
+No Poteto Mode route is unsupported on Cursor. `orchestrate` runs through the
+Cursor profile in the [Orchestrate mapping](orchestrate-cursor.md).
+
 Cursor agents under `pstack/agents/` and Benny under `pstack/automations/` remain
 Cursor-only. This mapping does not add them to the Codex package.
 

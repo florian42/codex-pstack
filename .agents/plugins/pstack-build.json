@@ -1,4 +1,39 @@
 {
+  "target": "codex",
+  "displayName": "Codex",
+  "sourceRoot": "pstack",
+  "outputRoot": ".agents/plugins/pstack",
+  "manifestSource": "pstack/.codex-plugin/plugin.json",
+  "manifestDestination": ".codex-plugin/plugin.json",
+  "referenceManifest": "pstack/.cursor-plugin/plugin.json",
+  "marketplace": {
+    "path": ".agents/plugins/marketplace.json",
+    "name": "codex-pstack",
+    "pluginName": "pstack",
+    "sourcePointer": "./.agents/plugins/pstack"
+  },
+  "portabilityRecord": "references/runtime/skill-portability.md",
+  "portabilityColumn": "Codex",
+  "runtimeMapping": "references/runtime/codex.md",
+  "stopPageTitle": "Unsupported on Codex",
+  "stopPageMappingLink": "../../../references/runtime/codex.md",
+  "generatedBy": "scripts/generate-codex-pstack.mjs",
+  "regenerateCommand": "node scripts/generate-codex-pstack.mjs",
+  "manifestChecks": "codex",
+  "bannedVocabularies": [
+    "cursor-exclusive",
+    "cursor-shared-with-claude",
+    "claude-exclusive"
+  ],
+  "forbiddenGeneratedDirectories": [
+    "agents",
+    "automations",
+    "codex-skills"
+  ],
+  "requiredSkills": [
+    "poteto-mode"
+  ],
+  "requiredAgents": [],
   "unsupportedResources": [
     {
       "path": "poteto-mode/playbooks/autonomous-run.md",
@@ -38,7 +73,7 @@
     }
   ],
   "runtimeResources": [
-    "poteto-mode/scripts/orch/codex-orch.ts",
+    "poteto-mode/scripts/orch/session-orch.ts",
     "poteto-mode/scripts/orch/journal.ts",
     "poteto-mode/scripts/orch/program.ts",
     "show-me-your-work/scripts/log.sh"

@@ -7,7 +7,7 @@ import { initializeJournal, openJournal, sha256 } from "./journal.ts";
 const directories: string[] = [];
 
 async function temporaryStore(): Promise<string> {
-  const directory = await mkdtemp(join(tmpdir(), "codex-orch-journal-"));
+  const directory = await mkdtemp(join(tmpdir(), "session-orch-journal-"));
   directories.push(directory);
   return join(directory, "program.sqlite");
 }

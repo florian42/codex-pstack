@@ -5,6 +5,8 @@ on:
     paths:
       - ".cursor-plugin/marketplace.json"
       - ".agents/plugins/**"
+      - ".claude-plugin/**"
+      - "plugins/claude-code/**"
       - "**/plugin.json"
       - "pstack/agents/**"
       - "pstack/references/runtime/**"
@@ -13,8 +15,21 @@ on:
       - "pstack/docs/**"
       - "pstack/LICENSE"
       - "schemas/**"
+      - "scripts/lib/**"
+      - "scripts/lib/targets/**"
+      - "scripts/generate-plugin.mjs"
+      - "scripts/validate-plugin.mjs"
       - "scripts/generate-codex-pstack.mjs"
       - "scripts/validate-codex-pstack.mjs"
+      - "scripts/set-version.mjs"
+      - "scripts/test/**"
+      - "scripts/smoke/**"
+      - "scripts/validate-plugins.mjs"
+      - ".github/workflows/validate-plugins.yml"
+  schedule:
+    # Nightly behavior smoke against the Claude Code distribution on main.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
 
 jobs:
   validate:
@@ -26,11 +41,66 @@ jobs:
         with:
           node-version: 20
 
-      - name: Validate Codex pstack compatibility
-        run: node scripts/validate-codex-pstack.mjs
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Validate pstack target compatibility
+        run: node scripts/validate-plugin.mjs --all
+
+      - name: Run unit tests
+        run: node --test scripts/test/*.test.mjs
 
       - name: Install dependencies
         run: npm install --no-save ajv ajv-formats
 
       - name: Validate plugin definitions
         run: node scripts/validate-plugins.mjs
+
+  install-smoke:
+    # Proves the repository resolves as a Claude Code marketplace and installs
+    # the generated pstack package with the expected inventory. No model call.
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Resolve and install pstack from this checkout
+        run: scripts/smoke/claude-install-smoke.sh
+
+  behavior-smoke:
+    # Headless sessions that cost tokens and depend on model behavior. Runs
+    # nightly and on pull requests labeled claude-smoke; never gates a merge.
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'schedule' ||
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.pull_request.labels.*.name, 'claude-smoke')
+    concurrency:
+      group: claude-behavior-smoke
+      cancel-in-progress: true
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install the Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      - name: Run the behavior smoke harness
+        run: node scripts/smoke/claude-behavior-smoke.mjs --bare --max-budget-usd 5
+
+      - name: Run the optional eval suite
+        run: node scripts/smoke/claude-behavior-smoke.mjs --bare --eval

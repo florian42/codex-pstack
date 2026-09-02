@@ -8,8 +8,7 @@ Bun is required. Before framing the program, run `command -v bun` and `bun --ver
 
 Read the active runtime's Orchestrate profile before continuing. The profile owns delegation, checkout isolation, persistence, recovery, monitoring, and integration mechanics. Follow only capabilities that profile actually provides.
 
-- [Codex local-session profile](../../../references/runtime/orchestrate-codex.md)
-- [Alternate runtime profile](../../../references/runtime/orchestrate-cursor.md)
+Each runtime mapping indexed by the [runtime compatibility contract](../../../references/runtime/contract.md) links its own Orchestrate profile.
 
 Open a plan with the steps below copied verbatim. A skipped step stays visible with `skip: <reason>`.
 
