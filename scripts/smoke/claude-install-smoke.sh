@@ -15,7 +15,7 @@ tree="$repo/plugins/claude-code/pstack"
 marketplace="pstack-claude"
 required_skills="poteto-mode no-comments how swarm"
 omitted_skills="automate-me make-bot-ui recall setup-pstack"
-expected_agents="comment-sicko, poteto-agent"
+expected_agents="comment-sicko,poteto-agent"
 
 if ! command -v claude >/dev/null 2>&1; then
 	echo "skip: claude CLI not installed; install-resolution smoke did not run" >&2
@@ -44,7 +44,9 @@ status=0
 if [ "$actual_count" != "$expected_count" ]; then
 	echo "fail: installed skill count $actual_count != generated tree count $expected_count" >&2; status=1
 fi
-if ! printf '%s' "$agents_line" | grep -qF "Agents (2)  $expected_agents"; then
+actual_agents="$(printf '%s\n' "$agents_line" | sed -nE 's/^[[:space:]]*Agents \(2\)[[:space:]]+(.*)$/\1/p' |
+	tr ',' '\n' | sed 's/^[[:space:]]*//; s/[[:space:]]*$//' | LC_ALL=C sort | paste -sd ',' -)"
+if [ "$actual_agents" != "$expected_agents" ]; then
 	echo "fail: agents line was '$agents_line', expected 'Agents (2)  $expected_agents'" >&2; status=1
 fi
 for skill in $required_skills; do

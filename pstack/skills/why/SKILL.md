@@ -67,6 +67,10 @@ Parse what the user is asking. The **target** is usually a chunk of code, a patt
 
 If the target is vague ("why do we do it this way?" with no clear referent), make your best guess from conversation context (open files, recent edits, cursor location, what was just discussed). State your interpretation briefly so the user can redirect if you're off, then proceed.
 
+### Active-session provenance fast path
+
+When the question is who made a current-session change or what led to it, inspect the visible transcript, delegation and tool chronology, and local diff before starting historical research. Treat those records as the provenance evidence. If they answer the question, report that evidence and stop; external history cannot recover finer-grained authorship within the active session. If they do not, say which attribution remains unknown. Never infer human-versus-agent authorship from the configured Git name or email: shared tooling commonly commits under the user's identity.
+
 ## Step 2. Establish the Code Anchor
 
 Before spawning investigators, anchor the investigation in concrete code. You need:
