@@ -22,6 +22,7 @@ omitted from that runtime's distribution.
 | `no-comments` | `adapted` | `adapted` | `adapted` | Uses independent policy-review delegation: a registered Comment Sicko agent where the runtime registers agents, otherwise an inert packaged reference. |
 | `poteto-mode` | `adapted` | `adapted` | `adapted` | Runtime capabilities and unsupported routes are gated. |
 | `principle-boundary-discipline` | `portable` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-attack-the-premise` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-build-the-lever` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-encode-lessons-in-structure` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-exhaust-the-design-space` | `portable` | `portable` | `portable` | Platform-neutral principle. |
@@ -40,6 +41,7 @@ omitted from that runtime's distribution.
 | `principle-redesign-from-first-principles` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-separate-before-serializing-shared-state` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-sequence-verifiable-units` | `portable` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-test-behavior-not-implementation` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-subtract-before-you-add` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-type-system-discipline` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `recall` | `adapted` | `unsupported` | `unsupported` | Needs an explicitly authorized task-history adapter for the runtime. |
