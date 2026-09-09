@@ -135,7 +135,8 @@ surface, prompt, result, and evidence for each check:
 6. Confirm Cursor agents, Benny, and unlisted utility scripts are absent from the installed cache.
 7. Invoke an unsupported route and confirm it stops explicitly instead of reporting success.
 
-For every upstream pstack sync, follow the evergreen [Codex maintenance
+For every upstream pstack sync, use the [`sync-upstream`](../skills/sync-upstream/SKILL.md)
+skill and follow the evergreen [Codex maintenance
 contract](https://github.com/florian42/codex-pstack/issues/1): review the pstack
 diff, regenerate and validate every target, reinstall, use a fresh task for the
 smoke test, and confirm the existing Cursor and [Claude Code](claude-code.md)

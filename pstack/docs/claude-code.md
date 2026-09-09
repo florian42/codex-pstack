@@ -178,7 +178,8 @@ Claude Code target: `skills/poteto-mode/SKILL.md` (runtime-owned route list),
 root parameter and portable `stat`), and `scripts/orch/` (renamed entry file
 and the `claude-local-session` profile).
 
-For every upstream pstack sync, follow the evergreen [maintenance
+For every upstream pstack sync, use the [`sync-upstream`](../skills/sync-upstream/SKILL.md)
+skill and follow the evergreen [maintenance
 contract](https://github.com/florian42/codex-pstack/issues/1): review the pstack
 diff, regenerate and validate every target, reinstall, use a fresh session for
 the smoke test, and confirm the Cursor and Codex packages still behave as

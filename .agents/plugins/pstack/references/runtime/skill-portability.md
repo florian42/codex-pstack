@@ -49,6 +49,7 @@ omitted from that runtime's distribution.
 | `setup-pstack` | `adapted` | `unsupported` | `unsupported` | Cursor `.mdc` model rules are ignored; other runtimes use their own model controls. |
 | `show-me-your-work` | `adapted` | `adapted` | `adapted` | Active conversation and independent review are mapped. |
 | `swarm` | `adapted` | `adapted` | `adapted` | Delegation, isolation, monitoring, and model roles are mapped. |
+| `sync-upstream` | `adapted` | `adapted` | `adapted` | Selective fork maintenance uses the shared source and each target's generator and validator. |
 | `tdd` | `portable` | `portable` | `portable` | Repository tests and executable checks only. |
 | `teach` | `portable` | `portable` | `portable` | Composes shared skills and inherits their gates. |
 | `technical-writing` | `portable` | `portable` | `portable` | Platform-neutral writing guidance. |
