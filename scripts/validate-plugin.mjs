@@ -9,7 +9,7 @@ import {
   realpathSync,
   statSync,
 } from "node:fs";
-import { delimiter, dirname, extname, relative, resolve, sep } from "node:path";
+import { basename, delimiter, dirname, extname, relative, resolve, sep } from "node:path";
 import { spawnSync } from "node:child_process";
 
 import { parseFrontmatter } from "./lib/frontmatter.mjs";
@@ -506,7 +506,7 @@ function validateTarget(target) {
       }
     }
 
-    const skillFiles = walkFilesIfPresent(skillsRoot).filter((path) => path.endsWith("/SKILL.md"));
+    const skillFiles = walkFilesIfPresent(skillsRoot).filter((path) => basename(path) === "SKILL.md");
     for (const path of skillFiles) {
       const text = readText(path);
       if (text === null) continue;
@@ -518,8 +518,8 @@ function validateTarget(target) {
   function validateGeneratedSkillNames() {
     const generatedSkillsRoot = resolve(generatedRoot, "skills");
     const seenNames = new Map();
-    for (const path of walkFilesIfPresent(generatedSkillsRoot).filter((candidate) =>
-      candidate.endsWith("/SKILL.md"),
+    for (const path of walkFilesIfPresent(generatedSkillsRoot).filter(
+      (candidate) => basename(candidate) === "SKILL.md",
     )) {
       const text = readText(path);
       if (text === null) continue;
