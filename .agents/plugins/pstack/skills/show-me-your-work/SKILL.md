@@ -47,7 +47,7 @@ Log decision points and checkpoints, not every action: a fork chosen, a unit com
 
 By default the log is a working artifact, not committed. Keep it at `decisions.tsv` in the work dir, or `.audit/<task-slug>.tsv` when several efforts run at once, and leave it out of git. Most work doesn't need a committed trail; the local log still keeps the run honest and can be discarded after.
 
-Before choosing the directory, run `git ls-files <dir>`. A directory that already holds committed trails is the repository's evidence convention and takes precedence over this default; a sweep of it to satisfy a clean-tree gate deletes tracked files. Run output that workers write there lands under a pattern the repository ignores, so the gate never sees it.
+Run `git ls-files` on the candidate directory first. If it lists files, log there and leave its files alone: the repository already keeps trails in that directory, and moving or deleting them is a change to committed history. Put ephemeral output (driver logs, captured runs) under a path that `git check-ignore <path>` accepts; if no pattern matches, add one before writing.
 
 Commit it only when the work is ambitious enough that a reviewer needs the trail to trust the result: a large cross-language port, a multi-week migration, anything where confidence has to be shown rather than assumed. A committed log renders as a table in the PR.
 
@@ -55,6 +55,7 @@ Commit it only when the work is ambitious enough that a reviewer needs the trail
 
 - One row is one decision or checkpoint. If it doesn't fit on one line, the decision isn't crisp yet.
 - Append-only. A wrong call gets a new row that supersedes it. Never edit or delete history.
+- Capture a commit id only after the push that lands it. A landing path that rebases rewrites every id the branch held before the push, so a row written earlier names a commit the remote never sees.
 - Prefer evidence produced by committed scripts over hand-made one-offs, so a reviewer can re-run it (the **encode-lessons-in-structure** principle skill).
 
 ## Audit the log against the transcript
@@ -62,7 +63,7 @@ Commit it only when the work is ambitious enough that a reviewer needs the trail
 At the end of the run, before handing back, check the log told the truth. Resolve this run's active-conversation source through the runtime mapping. Do not search another workspace or task. If no authorized source is available, audit against the active context and label that limitation. Walk the log against what actually happened:
 
 - Every row maps to a real action. Cut invented or aspirational entries.
-- Each row's evidence resolves and shows what the row claims. A commit id resolves only against the remote branch it claims to be on: a landing path that rebases rewrites every id captured before the push, so log ids after the push and re-resolve any row written before a rebase.
+- Each row's evidence resolves and shows what the row claims. For a commit id, resolving means it is reachable from the remote branch the row names: `git merge-base --is-ancestor <id> origin/<branch>` exits 0. A row whose id fails that test gets a superseding row with the id that landed.
 - A fork, pivot, or abandoned approach that shaped the work but isn't logged is a gap. Add it.
 - Drop padding. If nobody would audit a row, it doesn't earn its place.
 
