@@ -47,6 +47,8 @@ Log decision points and checkpoints, not every action: a fork chosen, a unit com
 
 By default the log is a working artifact, not committed. Keep it at `decisions.tsv` in the work dir, or `.audit/<task-slug>.tsv` when several efforts run at once, and leave it out of git. Most work doesn't need a committed trail; the local log still keeps the run honest and can be discarded after.
 
+Before choosing the directory, run `git ls-files <dir>`. A directory that already holds committed trails is the repository's evidence convention and takes precedence over this default; a sweep of it to satisfy a clean-tree gate deletes tracked files. Run output that workers write there lands under a pattern the repository ignores, so the gate never sees it.
+
 Commit it only when the work is ambitious enough that a reviewer needs the trail to trust the result: a large cross-language port, a multi-week migration, anything where confidence has to be shown rather than assumed. A committed log renders as a table in the PR.
 
 ## Rules
@@ -60,7 +62,7 @@ Commit it only when the work is ambitious enough that a reviewer needs the trail
 At the end of the run, before handing back, check the log told the truth. Resolve this run's active-conversation source through the runtime mapping. Do not search another workspace or task. If no authorized source is available, audit against the active context and label that limitation. Walk the log against what actually happened:
 
 - Every row maps to a real action. Cut invented or aspirational entries.
-- Each row's evidence resolves and shows what the row claims.
+- Each row's evidence resolves and shows what the row claims. A commit id resolves only against the remote branch it claims to be on: a landing path that rebases rewrites every id captured before the push, so log ids after the push and re-resolve any row written before a rebase.
 - A fork, pivot, or abandoned approach that shaped the work but isn't logged is a gap. Add it.
 - Drop padding. If nobody would audit a row, it doesn't earn its place.
 
