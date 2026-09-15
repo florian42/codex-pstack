@@ -1,5 +1,5 @@
 {
   "generatedBy": "scripts/generate-plugin.mjs --target claude-code",
   "canonicalSkills": "pstack/skills",
-  "contentSha256": "43b1628edc684b7823f78ceee562e9f951c2566cbea864f2fe218de6a7e7da85"
+  "contentSha256": "2f9142da37f8f00b503e491f24741b4f500d6cfaf2c2c70a894b64e5972ca777"
 }
