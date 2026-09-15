@@ -59,10 +59,7 @@ The range through `71ed0d1076fec562c1b74ee353121a8d00f75382` was reviewed on
 - `node scripts/generate-plugin.mjs --target codex`
 - `node scripts/generate-plugin.mjs --target claude-code`
 - `node scripts/validate-plugin.mjs --all` passed for both targets with 48
-  skills and 48 portability records. On Windows the validator's generated-skill
-  walk filters on `/SKILL.md` and misses backslash paths, so the run used a copy
-  that normalizes separators first. POSIX runs are inferred to be unaffected
-  because `walkFiles` builds paths with `resolve()`.
+  skills and 48 portability records, on Windows and in CI.
 - `node --test scripts/test/vocabulary.test.mjs` passed.
 - Target smoke tests were not rerun. No runtime mapping or generated inventory
   changed.
