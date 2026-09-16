@@ -10,6 +10,8 @@ Encode the real domain in a data structure instead of scattering it across condi
 
 **Why:** Scattered booleans, repeated shape assumptions, and branching spread across files are accidental complexity. A structure that matches the domain makes invalid states unrepresentable and deletes branches. Choosing it at write time is cheap; recovering it later reads as a refactor and gets deferred.
 
+Before adding application guards or freshness reads, identify the framework’s existing state model. Require a concrete correctness dependency for additional checks, such as a mutation whose targets depend on fresh data.
+
 **Reach for structures like these:**
 
 - A state machine instead of scattered booleans, phases, or lifecycle checks.
