@@ -31,6 +31,8 @@ Build a real mental model of every system the new code touches. Run the **how** 
 
 Naming a file isn't grounding. Produce the traced model `how` prescribes. If the design redefines ownership or layering, also run the **why** skill on the existing shape so the rationale becomes a constraint, not a guess.
 
+When referenced prerequisite work is absent from the working branch, check its implementation and review status before sketching alternatives. Record any reviewed implementation as a baseline and justify deviations from it.
+
 Skip Phase A only when the work is genuinely greenfield with no surrounding system to integrate.
 
 ## Phase B: Sketch
