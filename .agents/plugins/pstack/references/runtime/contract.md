@@ -45,16 +45,20 @@ browser verification until the runtime is known.
    context or an explicitly authorized runtime source. If compaction removed
    needed detail, use a parent-written digest and label it. Never guess a
    transcript path or search another task's history.
-7. **Resolve task history.** Only a skill the user invoked for history work
-   (`recall`) reads prior sessions, and only through the runtime's documented
-   task-history layout for the current workspace. Order candidates by real
-   modification time, never by file name. Skip the current session and every
-   delegated or internal session. Raw transcripts stay in delegates; the
-   parent keeps findings. Never read another workspace's history without an
-   explicit request, and never fall back to an alternative path when the
-   documented layout is absent or does not match: report history as
-   unavailable instead. This capability is separate from resolving the active
-   conversation, which stays limited to visible context.
+7. **Resolve task history.** Only a workflow the user invoked for history work
+   (`recall`, the session-pickup playbook, the eval playbook) reads prior
+   sessions, and only through the runtime's documented task-history layout for
+   the current workspace. Order candidates by real modification time, never by
+   file name. Skip the current session and every delegated or internal
+   session, with one exception: a workflow grading delegates it spawned itself
+   reads only those traces, through the mapping's delegate-trace row. A
+   session the user names by id is opened alone; a cloud session URL is a
+   source only where the mapping says how to read it. Raw transcripts stay in
+   delegates; the parent keeps findings. Never read another workspace's
+   history without an explicit request, and never fall back to an alternative
+   path when the documented layout is absent or does not match: report history
+   as unavailable instead. This capability is separate from resolving the
+   active conversation, which stays limited to visible context.
 8. **Monitor long-running work.** Use the runtime's wait or monitor primitive.
    Do not busy-poll or report an unchanged state as progress.
 9. **Schedule recurring work.** Use only a real scheduler exposed by the current

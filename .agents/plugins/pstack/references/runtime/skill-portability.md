@@ -69,9 +69,10 @@ No route is unsupported. Cursor runs every playbook.
 
 ### Codex
 
-`autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`, `eval`,
-`multi-phase-plan`, `session-pickup`, `shipping`, and `worktree-cleanup` depend
-on excluded Cursor loops, cloud agents, transcripts, sidebar state, or scripts.
+`autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`,
+`multi-phase-plan`, `shipping`, and `worktree-cleanup` depend on excluded
+Cursor loops, cloud agents, or scripts. `session-pickup` and `eval` read prior
+threads and delegate rollouts through the Codex mapping's task-history rows.
 
 `orchestrate` is supported through the `codex-local-session` profile. It ships
 only its Bun SQLite runtime and uses explicit worktrees, exact commit evidence,
@@ -80,8 +81,9 @@ one integration writer, and conservative restart recovery.
 ### Claude Code
 
 `autopilot-full`, `autopilot-stack`, and `shipping` depend on Graphite stack
-delivery. `eval` and `session-pickup` have not been mapped onto the runtime's
-task-history source yet. Those five are the only unsupported routes. `babysit` is supported through the
+delivery. Those three are the only unsupported routes. `session-pickup` and
+`eval` read prior sessions and delegate transcripts through the Claude Code
+mapping's task-history rows. `babysit` is supported through the
 packaged `watch-pr` utility plus `/loop`, `worktree-cleanup` through the
 packaged worktree audit script whose `--transcripts` argument is optional, and
 `multi-phase-plan` through the packaged plan checker. `autonomous-run` is

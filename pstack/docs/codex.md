@@ -66,9 +66,10 @@ release has these limits:
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autonomous-run`, `autopilot-full`,
-  `autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`,
-  `session-pickup`, `shipping`, or `worktree-cleanup`. It does not substitute a
-  weaker workflow or report success.
+  `autopilot-stack`, `babysit`, `multi-phase-plan`, `shipping`, or
+  `worktree-cleanup`. It does not substitute a weaker workflow or report
+  success. `session-pickup` and `eval` read prior threads and delegate
+  rollouts through the runtime mapping; a cloud task URL handoff still stops.
 - Orchestrate supports a local-session profile with Bun, durable SQLite state,
   explicit worktrees, exact commit evidence, and one integration writer. It
   does not claim cloud workers, transcript recovery, or unattended continuation.

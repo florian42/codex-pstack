@@ -53,16 +53,8 @@
       "reason": "The workflow depends on excluded pull-request monitoring utilities and unavailable loop behavior."
     },
     {
-      "path": "poteto-mode/playbooks/eval.md",
-      "reason": "The workflow has not been mapped onto the runtime task-history source for candidate verification."
-    },
-    {
       "path": "poteto-mode/playbooks/multi-phase-plan.md",
       "reason": "The workflow depends on excluded utilities and unsupported execution routes."
-    },
-    {
-      "path": "poteto-mode/playbooks/session-pickup.md",
-      "reason": "The workflow has not been mapped onto the runtime task-history source and depends on unavailable sidebar state."
     },
     {
       "path": "poteto-mode/playbooks/shipping.md",
