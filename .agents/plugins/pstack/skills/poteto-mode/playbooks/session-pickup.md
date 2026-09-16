@@ -1,3 +1,3 @@
 # Unsupported on Codex
 
-The workflow depends on unavailable transcript and sidebar state. Stop this route and choose a supported playbook. See the [Codex runtime mapping](../../../references/runtime/codex.md).
+The workflow has not been mapped onto the runtime task-history source and depends on unavailable sidebar state. Stop this route and choose a supported playbook. See the [Codex runtime mapping](../../../references/runtime/codex.md).

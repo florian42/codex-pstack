@@ -44,7 +44,7 @@ omitted from that runtime's distribution.
 | `principle-test-behavior-not-implementation` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-subtract-before-you-add` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-type-system-discipline` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `recall` | `adapted` | `unsupported` | `unsupported` | Needs an explicitly authorized task-history adapter for the runtime. |
+| `recall` | `adapted` | `adapted` | `adapted` | Task history, delegation, and model roles are mapped. |
 | `reflect` | `adapted` | `adapted` | `adapted` | Active conversation, delegation, and skill authoring are mapped. |
 | `setup-pstack` | `adapted` | `unsupported` | `unsupported` | Cursor `.mdc` model rules are ignored; other runtimes use their own model controls. |
 | `show-me-your-work` | `adapted` | `adapted` | `adapted` | Active conversation and independent review are mapped. |
@@ -80,8 +80,8 @@ one integration writer, and conservative restart recovery.
 ### Claude Code
 
 `autopilot-full`, `autopilot-stack`, and `shipping` depend on Graphite stack
-delivery. `eval` and `session-pickup` depend on an authorized transcript source.
-Those five are the only unsupported routes. `babysit` is supported through the
+delivery. `eval` and `session-pickup` have not been mapped onto the runtime's
+task-history source yet. Those five are the only unsupported routes. `babysit` is supported through the
 packaged `watch-pr` utility plus `/loop`, `worktree-cleanup` through the
 packaged worktree audit script whose `--transcripts` argument is optional, and
 `multi-phase-plan` through the packaged plan checker. `autonomous-run` is

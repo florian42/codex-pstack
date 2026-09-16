@@ -60,8 +60,9 @@ release has these limits:
   inert, byte-identical Comment Sicko reference and delegates one independent,
   scoped comment-only reviewer through the runtime mapping. The parent validates
   that worker's diff before accepting it.
-- Codex omits four top-level skills: `automate-me`, `make-bot-ui`, `recall`,
-  and `setup-pstack`. The [active skill portability
+- Codex omits three top-level skills: `automate-me`, `make-bot-ui`, and
+  `setup-pstack`. `recall` mines the workspace's own Codex rollouts through
+  the task-history row of the runtime mapping. The [active skill portability
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autonomous-run`, `autopilot-full`,

@@ -118,8 +118,8 @@ const CASES = {
       const cwd = fixture("tiny-repo");
       const session = claude("Without using any tools, list every /pstack: slash command available in this session, one per line, and nothing else.", { cwd, maxTurns: 1 });
       assertPluginLoaded(session, failures);
-      for (const skill of ["how", "why"]) if (!session.result.includes(`pstack:${skill}`)) failures.push(`expected /pstack:${skill} in the listing`);
-      for (const skill of ["setup-pstack", "make-bot-ui", "recall", "automate-me"]) if (session.result.includes(`pstack:${skill}`)) failures.push(`omitted skill /pstack:${skill} is listed`);
+      for (const skill of ["how", "why", "recall"]) if (!session.result.includes(`pstack:${skill}`)) failures.push(`expected /pstack:${skill} in the listing`);
+      for (const skill of ["setup-pstack", "make-bot-ui", "automate-me"]) if (session.result.includes(`pstack:${skill}`)) failures.push(`omitted skill /pstack:${skill} is listed`);
       rmSync(cwd, { recursive: true, force: true });
       return failures;
     },

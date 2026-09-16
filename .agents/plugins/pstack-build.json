@@ -31,7 +31,8 @@
     "codex-skills"
   ],
   "requiredSkills": [
-    "poteto-mode"
+    "poteto-mode",
+    "recall"
   ],
   "requiredAgents": [],
   "unsupportedResources": [
@@ -53,7 +54,7 @@
     },
     {
       "path": "poteto-mode/playbooks/eval.md",
-      "reason": "The workflow depends on an unavailable transcript source for candidate verification."
+      "reason": "The workflow has not been mapped onto the runtime task-history source for candidate verification."
     },
     {
       "path": "poteto-mode/playbooks/multi-phase-plan.md",
@@ -61,7 +62,7 @@
     },
     {
       "path": "poteto-mode/playbooks/session-pickup.md",
-      "reason": "The workflow depends on unavailable transcript and sidebar state."
+      "reason": "The workflow has not been mapped onto the runtime task-history source and depends on unavailable sidebar state."
     },
     {
       "path": "poteto-mode/playbooks/shipping.md",

@@ -69,14 +69,15 @@ release has these limits:
 - Claude Code does not use `/setup-pstack`. Cursor `.mdc` model rules are
   ignored. Model roles use the aliases the install exposes, and the parent
   session's model is the default.
-- Claude Code omits four top-level skills: `automate-me`, `make-bot-ui`,
-  `recall`, and `setup-pstack`. The [active skill portability
+- Claude Code omits three top-level skills: `automate-me`, `make-bot-ui`, and
+  `setup-pstack`. `recall` mines the workspace's own session transcripts
+  through the task-history row of the runtime mapping. The [active skill portability
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autopilot-full`, `autopilot-stack`,
   `shipping`, `eval`, or `session-pickup`, and those five are the only
   unsupported routes. The first three depend on Graphite stack delivery; the
-  last two depend on an authorized transcript source. It does not substitute a
+  last two have not been mapped onto the runtime's task-history source yet. It does not substitute a
   weaker workflow or report success.
 - `babysit`, `worktree-cleanup`, and `multi-phase-plan` are supported. Babysit
   runs the packaged `watch-pr` utility and rearms it under `/loop`;

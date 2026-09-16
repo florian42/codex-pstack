@@ -40,7 +40,8 @@
     "poteto-mode",
     "no-comments",
     "how",
-    "swarm"
+    "swarm",
+    "recall"
   ],
   "requiredAgents": [
     "comment-sicko",
@@ -57,11 +58,11 @@
     },
     {
       "path": "poteto-mode/playbooks/eval.md",
-      "reason": "The workflow depends on an authorized transcript source, which this runtime does not provide."
+      "reason": "The workflow has not been mapped onto this runtime's task-history source."
     },
     {
       "path": "poteto-mode/playbooks/session-pickup.md",
-      "reason": "The workflow depends on an authorized transcript source, which this runtime does not provide."
+      "reason": "The workflow has not been mapped onto this runtime's task-history source."
     },
     {
       "path": "poteto-mode/playbooks/shipping.md",
