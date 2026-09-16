@@ -10,7 +10,9 @@ authoritative; do not assume a desktop-only tool exists in CLI or cloud tasks.
 | Ask a blocking question | In Plan mode, use the structured user-input capability when available. Otherwise ask one concise question in the final response and stop. Never invent a structured-question tool call. |
 | Track a plan | Use Codex plan tracking (`update_plan`) when available, with at most one item in progress. Otherwise keep a concise phase checklist in commentary. |
 | Create or update a skill | Use the installed `skill-creator` skill and follow its `SKILL.md`. If it is absent, stop the skill-authoring workflow and identify that dependency. Project-local output uses the location chosen by that skill; do not write `.cursor/skills/` by default. |
-| Resolve the active conversation | Use the current Codex task's visible conversation. If compaction removed required detail, the parent writes and labels a concise digest for delegates. Do not inspect another task or guess a transcript path. If neither the visible context nor a sufficient digest is available, stop the dependent workflow. |
+| Resolve the active conversation | Use the current Codex task's visible conversation. If compaction removed required detail, the parent writes and labels a concise digest for delegates. Do not inspect another task or guess a transcript path; prior tasks are reachable only through the task-history row below. If neither the visible context nor a sufficient digest is available, stop the dependent workflow. |
+| Resolve task history | Codex records every thread as a rollout at `$CODEX_HOME/sessions/YYYY/MM/DD/rollout-<timestamp>-<thread-id>.jsonl`, where `CODEX_HOME` defaults to `~/.codex`. Rollouts are not grouped by project, so read each file's first line, a `session_meta` record whose `cwd` names the workspace, and keep only threads whose `cwd` is the current workspace or a directory inside it. Skip threads whose `session_meta` carries a `parent_thread_id` or a `source` starting with `subagent_` or `internal_`: those are delegated or internal threads, not the user's chats. Skip `archived_sessions/` unless the user asks for archived work, and skip the current thread. The user's turns are `event_msg` lines with a `user_message` payload and the agent's replies are `agent_message` payloads; `response_item` lines hold the full items when a reply's detail matters. Order candidates by modification time, never by file name. Cite a finding by its thread id, the trailing UUID of the file name, which `codex resume <id>` reopens. To pick up one named thread, open only the rollout whose file name ends in that id (search `sessions/` by name, then `archived_sessions/`), or the newest interactive rollout for this workspace by modification time for "the last one". A cloud task URL is not a readable source on this runtime: say so and fall back to the pushed branch. |
+| Read a delegate's trace | A spawned agent's thread is its own rollout in the same `sessions/` tree. Its `session_meta` names a `subagent` variant in `source` and carries `parent_thread_id` equal to the spawning thread's id, so a parent grading its own delegates keeps only rollouts whose `parent_thread_id` is the current thread, then reads the `response_item` lines with `function_call` payloads to see which commands ran and which files they opened. A candidate that instead ran as its own non-interactive task in a sanitized directory is a root rollout with `source` set to `exec` and that directory as `cwd`; read it through the task-history layout with that directory as the workspace. |
 | Monitor long-running work | Use Codex wait capabilities for subagents, tasks, commands, and handoffs. Prefer bounded waits and status-change cursors. If no suitable wait capability exists, report the limitation instead of polling in a tight loop. |
 | Schedule recurring work | Use Codex automation support when available: a thread heartbeat by default, or a project cron only when the user explicitly requests standalone project work. If automation support is absent, recurring scheduling is unsupported and the workflow must stop without claiming it was armed. |
 | Select a model role | Prefer the parent task's configured model. Pass an explicit model only when the current Codex capability advertises that exact model and the role benefits from an override. Cursor model files and slugs are ignored. If a requested model is unavailable, inherit the parent rather than translating names by guesswork. |
@@ -18,9 +20,12 @@ authoritative; do not assume a desktop-only tool exists in CLI or cloud tasks.
 
 ## Unsupported Poteto Mode routes in the first Codex release
 
-`autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`, `eval`,
-`multi-phase-plan`, `session-pickup`, `shipping`, and `worktree-cleanup` are
-unsupported. The Codex distribution replaces each with an explicit stop page.
+`autonomous-run`, `autopilot-full`, `autopilot-stack`, `babysit`,
+`multi-phase-plan`, `shipping`, and `worktree-cleanup` are unsupported. The
+Codex distribution replaces each with an explicit stop page. `session-pickup`
+and `eval` are supported through the task-history and delegate-trace rows
+above; a cloud task URL handoff still stops with a pointer to the pushed
+branch.
 `orchestrate` is supported through the `codex-local-session` profile in the
 [Orchestrate mapping](orchestrate-codex.md).
 

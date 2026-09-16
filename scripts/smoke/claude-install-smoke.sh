@@ -4,7 +4,7 @@
 # Under a scratch CLAUDE_CONFIG_DIR it adds this repository as a marketplace,
 # installs pstack from it, and checks the installed component inventory: the
 # skill count equals the generated tree's SKILL.md count, exactly the expected
-# agents are present, required skills are present, and the four skills with no
+# agents are present, required skills are present, and the three skills with no
 # Claude Code route are absent. It never calls a model and needs no credentials.
 #
 # Usage: scripts/smoke/claude-install-smoke.sh [repo-root]
@@ -13,8 +13,8 @@ set -euo pipefail
 repo="${1:-$(git -C "$(dirname "$0")" rev-parse --show-toplevel)}"
 tree="$repo/plugins/claude-code/pstack"
 marketplace="pstack-claude"
-required_skills="poteto-mode no-comments how swarm"
-omitted_skills="automate-me make-bot-ui recall setup-pstack"
+required_skills="poteto-mode no-comments how swarm recall"
+omitted_skills="automate-me make-bot-ui setup-pstack"
 expected_agents="comment-sicko,poteto-agent"
 
 if ! command -v claude >/dev/null 2>&1; then

@@ -69,15 +69,17 @@ release has these limits:
 - Claude Code does not use `/setup-pstack`. Cursor `.mdc` model rules are
   ignored. Model roles use the aliases the install exposes, and the parent
   session's model is the default.
-- Claude Code omits four top-level skills: `automate-me`, `make-bot-ui`,
-  `recall`, and `setup-pstack`. The [active skill portability
+- Claude Code omits three top-level skills: `automate-me`, `make-bot-ui`, and
+  `setup-pstack`. `recall` mines the workspace's own session transcripts
+  through the task-history row of the runtime mapping. The [active skill portability
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
-- Poteto Mode stops before entering `autopilot-full`, `autopilot-stack`,
-  `shipping`, `eval`, or `session-pickup`, and those five are the only
-  unsupported routes. The first three depend on Graphite stack delivery; the
-  last two depend on an authorized transcript source. It does not substitute a
-  weaker workflow or report success.
+- Poteto Mode stops before entering `autopilot-full`, `autopilot-stack`, or
+  `shipping`, and those three are the only unsupported routes. All three
+  depend on Graphite stack delivery. It does not substitute a weaker workflow
+  or report success. `session-pickup` and `eval` read prior sessions and
+  delegate transcripts through the runtime mapping; a remote session URL
+  handoff still stops.
 - `babysit`, `worktree-cleanup`, and `multi-phase-plan` are supported. Babysit
   runs the packaged `watch-pr` utility and rearms it under `/loop`;
   worktree-cleanup runs the packaged worktree audit script, whose
@@ -171,8 +173,9 @@ Upstream syncs conflict where the fork rewords canonical files. The fork keeps
 each edit to a single phrase or a small script change. Files edited for the
 Claude Code target: `skills/poteto-mode/SKILL.md` (runtime-owned route list),
 `skills/poteto-mode/playbooks/autonomous-run.md`, `babysit.md`,
-`multi-phase-plan.md`, `orchestrate.md`, and `worktree-cleanup.md`
-(runtime-neutral wording and a transcript-source safety gate),
+`eval.md`, `multi-phase-plan.md`, `orchestrate.md`, `session-pickup.md`, and
+`worktree-cleanup.md` (runtime-neutral wording and a transcript-source safety
+gate),
 `agents/poteto-agent.md` (one phrase), `skills/poteto-mode/scripts/watch-pr/`
 (dependency-free argument parsing), `scripts/worktree-audit.sh` (transcript
 root parameter and portable `stat`), and `scripts/orch/` (renamed entry file

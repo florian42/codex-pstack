@@ -60,14 +60,16 @@ release has these limits:
   inert, byte-identical Comment Sicko reference and delegates one independent,
   scoped comment-only reviewer through the runtime mapping. The parent validates
   that worker's diff before accepting it.
-- Codex omits four top-level skills: `automate-me`, `make-bot-ui`, `recall`,
-  and `setup-pstack`. The [active skill portability
+- Codex omits three top-level skills: `automate-me`, `make-bot-ui`, and
+  `setup-pstack`. `recall` mines the workspace's own Codex rollouts through
+  the task-history row of the runtime mapping. The [active skill portability
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.
 - Poteto Mode stops before entering `autonomous-run`, `autopilot-full`,
-  `autopilot-stack`, `babysit`, `eval`, `multi-phase-plan`,
-  `session-pickup`, `shipping`, or `worktree-cleanup`. It does not substitute a
-  weaker workflow or report success.
+  `autopilot-stack`, `babysit`, `multi-phase-plan`, `shipping`, or
+  `worktree-cleanup`. It does not substitute a weaker workflow or report
+  success. `session-pickup` and `eval` read prior threads and delegate
+  rollouts through the runtime mapping; a cloud task URL handoff still stops.
 - Orchestrate supports a local-session profile with Bun, durable SQLite state,
   explicit worktrees, exact commit evidence, and one integration writer. It
   does not claim cloud workers, transcript recovery, or unattended continuation.

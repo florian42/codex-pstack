@@ -12,8 +12,9 @@ capabilities to real platform operations:
 ## Resolution rule
 
 Before a skill delegates work, asks a blocking question, tracks a plan, creates
-or updates a skill, resolves the active conversation, monitors work, schedules
-recurring work, selects a model, or drives a browser, identify the current runtime and read its mapping. Follow the
+or updates a skill, resolves the active conversation, mines task history,
+monitors work, schedules recurring work, selects a model, or drives a browser,
+identify the current runtime and read its mapping. Follow the
 mapping instead of copying a tool name, model slug, configuration path, or
 transcript path from the other runtime.
 
@@ -44,14 +45,28 @@ browser verification until the runtime is known.
    context or an explicitly authorized runtime source. If compaction removed
    needed detail, use a parent-written digest and label it. Never guess a
    transcript path or search another task's history.
-7. **Monitor long-running work.** Use the runtime's wait or monitor primitive.
+7. **Resolve task history.** Only a workflow the user invoked for history work
+   (`recall`, the session-pickup playbook, the eval playbook) reads prior
+   sessions, and only through the runtime's documented task-history layout for
+   the current workspace. Order candidates by real modification time, never by
+   file name. Skip the current session and every delegated or internal
+   session, with one exception: a workflow grading delegates it spawned itself
+   reads only those traces, through the mapping's delegate-trace row. A
+   session the user names by id is opened alone; a cloud session URL is a
+   source only where the mapping says how to read it. Raw transcripts stay in
+   delegates; the parent keeps findings. Never read another workspace's
+   history without an explicit request, and never fall back to an alternative
+   path when the documented layout is absent or does not match: report history
+   as unavailable instead. This capability is separate from resolving the
+   active conversation, which stays limited to visible context.
+8. **Monitor long-running work.** Use the runtime's wait or monitor primitive.
    Do not busy-poll or report an unchanged state as progress.
-8. **Schedule recurring work.** Use only a real scheduler exposed by the current
+9. **Schedule recurring work.** Use only a real scheduler exposed by the current
    runtime. If none is available, stop and state that recurring execution was
    not scheduled.
-9. **Select a model role.** Choose by role and use only models the current
+10. **Select a model role.** Choose by role and use only models the current
    runtime exposes. A model name from the other runtime is not a fallback.
-10. **Verify in a browser.** Prefer the runtime's interactive browser capability.
+11. **Verify in a browser.** Prefer the runtime's interactive browser capability.
    Otherwise use a repository-owned browser harness. If neither exists, report
    browser verification as blocked, not passed.
 

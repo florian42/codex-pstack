@@ -23,7 +23,7 @@ for (const [name, agents, status] of cases) {
   test(name, (t) => {
     const repo = mkdtempSync(join(tmpdir(), "pstack-install-test-"));
     t.after(() => rmSync(repo, { recursive: true, force: true }));
-    const skills = ["alpha", "poteto-mode", "no-comments", "how", "swarm"];
+    const skills = ["alpha", "poteto-mode", "no-comments", "how", "swarm", "recall"];
     for (const skill of skills) {
       const directory = join(repo, "plugins/claude-code/pstack/skills", skill);
       mkdirSync(directory, { recursive: true });
