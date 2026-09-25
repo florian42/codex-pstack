@@ -25,7 +25,7 @@ Copy `references/decision-log-template.tsv` (the header row) to start a clean lo
 - **evidence.** A link or path that proves it: commit SHA, PR number, `file:line`, or an artifact, trace, or screenshot path. Never a paragraph.
 - **result.** The outcome or predicate state: `tests green`, `reverted`, `pixel-diff 0`, `INCONCLUSIVE`, `open`.
 
-An example, plain-spoken so a reviewer reads it at a glance. This is illustration only; don't copy these rows into a real log.
+An example, plain-spoken so a reviewer reads it at a glance.
 
 ```
 ts	phase	decision	why	evidence	result
@@ -42,6 +42,8 @@ Write each entry the way you'd tell a teammate what you did. Plain words, concre
 Use the helper so rows stay well-formed: `scripts/log.sh <logfile> <phase> <decision> <why> <evidence> <result>`. It stamps `ts`, writes the header on first use, strips stray tabs/newlines, and prefixes any cell starting with `=`, `+`, `-`, or `@` with a single quote so a reviewer opening the log in a spreadsheet doesn't trigger formula execution. A bare `printf` appending a row works too, but mind those same bytes if cells come from generated or user-supplied text.
 
 Log decision points and checkpoints, not every action: a fork chosen, a unit completed with its verification result, a pivot or revert with its trigger, a blocker surfaced, a gate fixed. For loop runs, one row per iteration. Skip the trivial and self-evident.
+
+A run is one agent conversation, including its later turns and any summary of it. A pickup, a replacement agent, or a new chat starts a new run. When a run adds to a log that already has rows, its first row has phase `start`, and so does its first row after another run's `start` row. So a run that comes back to a log in a later turn first reads the log's last rows to see whether another run wrote since. A `start` row names the `ts` range of the rows before it that this run did not write, and its evidence names this run, such as its agent id. Use phase `start` for nothing else.
 
 ## Where it lives
 
@@ -60,14 +62,13 @@ Commit it only when the work is ambitious enough that a reviewer needs the trail
 
 ## Audit the log against the transcript
 
-At the end of the run, before handing back, check the log told the truth. Resolve this run's active-conversation source through the runtime mapping. Do not search another workspace or task. If no authorized source is available, audit against the active context and label that limitation. Walk the log against what actually happened:
+At the end of the run, before handing back, check the log told the truth. Resolve this run's active-conversation source through the runtime mapping. Do not search another workspace or task. If no authorized source is available, audit against the active context and label that limitation. Walk this run's rows against what actually happened. Each stretch of them begins at one of this run's `start` rows, or at the first row if this run created the log, and ends at the next `start` row of another run:
 
-- Every row maps to a real action. Cut invented or aspirational entries.
-- Each row's evidence resolves and shows what the row claims. For a commit id, resolving means it is reachable from the remote branch the row names: `git merge-base --is-ancestor <id> origin/<branch>` exits 0. A row whose id fails that test gets a superseding row with the id that landed.
+- Check that every row maps to a real decision or action.
+- Check that each row's evidence resolves and shows what the row claims. For a commit id, resolving means it is reachable from the remote branch the row names: `git merge-base --is-ancestor <id> origin/<branch>` exits 0. A row whose id fails that test gets a superseding row with the id that landed.
 - A fork, pivot, or abandoned approach that shaped the work but isn't logged is a gap. Add it.
-- Drop padding. If nobody would audit a row, it doesn't earn its place.
 
-Fix the log, not the story. If the work diverged from what a row claims, the row is wrong.
+Correct the log, not the story. The audit never edits or removes a row, even an invented one. When a row records neither a real decision nor a real action, or its claim or evidence is wrong, add a row that supersedes it with what actually happened and a pointer that resolves. This audit does not check rows outside this run's stretches. If this run's own work shows one of them is wrong, supersede it like any wrong call.
 
 ## Cross-model review of the trail
 
