@@ -43,8 +43,9 @@ Write one clear paragraph. Reviewers challenge whether the work achieves the int
 Launch all reviewers concurrently through the runtime's delegation capability.
 Use the configured reviewer roles and only model identifiers the runtime
 advertises. Give every reviewer read-only instructions. If an explicit model is
-unavailable, inherit the parent model and disclose the reduced model diversity;
-do not guess an equivalent slug.
+unavailable, apply the runtime mapping's fallback for a rejected model. If the
+mapping names none, inherit the parent model and disclose the reduced model
+diversity. Never guess an equivalent slug outside the mapping.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent
