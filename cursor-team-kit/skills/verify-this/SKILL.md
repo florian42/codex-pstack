@@ -18,8 +18,8 @@ Do not use this for vague claims like "the code is cleaner". Ask for a measurabl
 
 ## Workflow
 
-1. Restate the claim in falsifiable form: condition, metric, and threshold.
-2. Pick the smallest local surface that can disprove it.
+1. Restate the claim in falsifiable form: condition, metric, and threshold. Separate an observed interaction difference from any claimed downstream consequence.
+2. Pick the smallest local surface that can disprove it. If a mock response determines the claimed consequence, check that dependency against the actual producer; otherwise limit the claim to the interaction the probe measures.
 3. Capture a baseline from the old state: merge base, parent commit, failing branch, or current broken repro.
 4. Capture treatment from the changed state with the same command, data, warmup, and environment.
 5. Compare raw artifacts: numbers, screenshots, terminal transcripts, HTTP responses, profiles, heap snapshots, or test output.
@@ -52,7 +52,7 @@ If artifacts may contain sensitive code, prompts, screenshots, HTTP bodies, or h
 
 ## Verdict Rules
 
-- `VERIFIED`: baseline and treatment differ in the predicted direction, by the claimed threshold, with no obvious confound.
+- `VERIFIED`: baseline and treatment differ in the predicted direction, by the claimed threshold, with no obvious confound. A synthetic response can expose an interaction difference but cannot establish a downstream consequence that depends on an unverified mock assumption.
 - `NOT VERIFIED`: the behavior is unchanged, moves the wrong way, or misses the threshold.
 - `INCONCLUSIVE`: no valid baseline, noisy signal, failed measurement, or an environment difference invalidates the comparison.
 
