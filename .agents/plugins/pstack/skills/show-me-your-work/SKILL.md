@@ -72,7 +72,7 @@ Correct the log, not the story. The audit never edits or removes a row, even an 
 
 ## Cross-model review of the trail
 
-Before handing back, delegate an independent review through the runtime mapping, preferring a different supported model family from the one that did the work. Self-review is not a substitute. The reviewer reads the audit trail and the active-conversation source, then flags what the user should pay attention to. If independent delegation is unavailable, state that the trail lacks this review instead of claiming the gate passed. This is not a redo of the work, but a scan for what is suboptimal or risky.
+Before handing back, delegate an independent review through the runtime mapping, preferring a different supported model family from the one that did the work. Self-review is not a substitute. The reviewer reads the audit trail and the active-conversation source, then flags what the user should pay attention to. If independent delegation is unavailable, state that the trail lacks this review instead of claiming the gate passed. This is not a redo of the work, but a scan for what is suboptimal or risky. Pick each subagent's reasoning level and speed for the job, per the Subagents section of the **poteto-mode** skill.
 
 - Decisions logged with weak or absent evidence.
 - Verification steps skipped or claimed without proof in the transcript.

@@ -13,7 +13,8 @@ capabilities to real platform operations:
 
 Before a skill delegates work, asks a blocking question, tracks a plan, creates
 or updates a skill, resolves the active conversation, mines task history,
-monitors work, schedules recurring work, selects a model, or drives a browser,
+monitors work, schedules recurring work, selects a model, drives a browser, or
+renders a visual,
 identify the current runtime and read its mapping. Follow the
 mapping instead of copying a tool name, model slug, configuration path, or
 transcript path from the other runtime.
@@ -69,6 +70,9 @@ browser verification until the runtime is known.
 11. **Verify in a browser.** Prefer the runtime's interactive browser capability.
    Otherwise use a repository-owned browser harness. If neither exists, report
    browser verification as blocked, not passed.
+12. **Render a visual.** Use the runtime's visual-rendering capability, or a
+   Mermaid diagram or image file built from facts already in hand. Never
+   describe a chart or screenshot that was not produced.
 
 ## Unsupported behavior
 

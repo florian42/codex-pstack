@@ -22,7 +22,7 @@ export const codexChecks = {
    * What a JSON schema cannot express: that the manifest's skills pointer
    * resolves to the canonical skill tree. Every key, type, and value rule for
    * this manifest lives in schemas/codex-plugin.schema.json and runs from
-   * scripts/validate-plugins.mjs; version parity across the three manifests
+   * scripts/validate-plugins.mjs; version parity across the manifests
    * runs from scripts/validate-plugin.mjs.
    */
   validateManifest(context) {

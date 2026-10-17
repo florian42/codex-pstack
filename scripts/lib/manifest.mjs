@@ -36,4 +36,5 @@ export const MANIFESTS = [
   { label: "Cursor manifest", path: "pstack/.cursor-plugin/plugin.json", reference: true },
   { label: "Codex manifest", path: "pstack/.codex-plugin/plugin.json" },
   { label: "Claude Code manifest", path: "pstack/.claude-plugin/plugin.json" },
+  { label: "Agent Plugins manifest", path: "pstack/plugin.json" },
 ];

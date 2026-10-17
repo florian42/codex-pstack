@@ -69,8 +69,8 @@ release has these limits:
 - Claude Code does not use `/setup-pstack`. Cursor `.mdc` model rules are
   ignored. Model roles use the aliases the install exposes, and the parent
   session's model is the default.
-- Claude Code omits three top-level skills: `automate-me`, `make-bot-ui`, and
-  `setup-pstack`. `recall` mines the workspace's own session transcripts
+- Claude Code omits four top-level skills: `automate-me`, `make-bot-ui`,
+  `poteto-help`, and `setup-pstack`. `recall` mines the workspace's own session transcripts
   through the task-history row of the runtime mapping. The [active skill portability
   record](../references/runtime/skill-portability.md) lists each supported,
   adapted, and omitted skill.

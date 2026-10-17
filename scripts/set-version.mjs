@@ -4,7 +4,7 @@
  * Rewrite the `version` field of every plugin manifest to the given semantic
  * version.
  *
- * The three manifests do not share an indentation style — the Cursor manifest
+ * The manifests do not share an indentation style — the Cursor manifest
  * is tab-indented and the Codex and Claude Code manifests are two-space — and
  * one of them is upstream-owned, so this edits the raw text of the version line
  * instead of reserializing. Indentation, key order, and the trailing newline

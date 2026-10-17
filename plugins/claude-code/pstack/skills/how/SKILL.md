@@ -13,6 +13,10 @@ delegating. Use the current runtime's delegation, monitoring, and model-role
 mappings. If delegation is unavailable, perform the same exploration serially;
 do not skip a required slice or claim independent criticism occurred.
 
+Every delegate is read-only. Explorers use the `how explorer` role and every
+explainer uses the `how explainer` role. Pick each subagent's reasoning level
+and speed for the job, per the Subagents section of the **poteto-mode** skill.
+
 Explore the codebase to answer "how does X work?" questions. Produce clear architectural explanations at the level of a senior engineer onboarding onto a subsystem. Enough to build a working mental model, not annotated source code.
 
 Two modes:

@@ -88,10 +88,10 @@ function addCopiedSkillResources(files, resources) {
 /**
  * Copy a canonical agent file, rewriting its frontmatter for one target.
  *
- * The canonical file is never edited: Cursor dispatches Comment Sicko by its
- * display name. A target that registers agents natively wants the lowercase
- * slug plus its own keys, so the copy renames `name`, drops the keys the target
- * does not understand, and sets the ones it does.
+ * The canonical file is never edited: Cursor reads it as is. A target that
+ * registers agents natively wants its own lowercase slug plus its own keys, so
+ * the copy rewrites `name`, drops the keys the target does not understand, and
+ * sets the ones it does.
  */
 /** Quote a frontmatter value only when a YAML parser would misread it bare. */
 function yamlScalar(value) {

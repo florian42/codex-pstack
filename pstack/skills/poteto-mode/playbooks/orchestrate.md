@@ -43,7 +43,7 @@ A dependency relays context, not only ordering. A downstream brief includes the 
 1. **Frame.** Write a countable done predicate, the expected units, the wall-clock budget, the integration authority, and the verification bar. Route smaller work to figure-it-out. Use arena for a contested decomposition.
 2. **Initialize.** Run the profile's Bun preflight and initialize its durable store. Record standing orders before the first dispatch.
 3. **Pilot.** Move one representative unit through plan, dispatch, report acceptance, exact-revision verification, and integration. Fix the brief and unit shape from observed failures.
-4. **Scale.** Refill a bounded rolling window as units finish. Keep readers parallel. Start parallel writers only when the active profile provides disjoint checkouts. Pass accepted upstream reports into dependent briefs.
+4. **Scale.** Refill a bounded rolling window as units finish. Keep readers parallel. Start parallel writers only when the active profile provides disjoint checkouts. Pass accepted upstream reports into dependent briefs. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section.
 5. **Drain.** Record completions without reviewing them inline. At a safe boundary, accept durable reports, validate full commit SHAs, classify failures, and recompute ready work.
 6. **Verify.** Use a different worker for independent verification when the unit warrants it. Record what actually ran against the exact commit. A changed commit invalidates the old receipt.
 7. **Integrate.** Let only the named integration authority advance the shared checkout. Follow the profile's integration rule. A conflict becomes a new scoped unit.

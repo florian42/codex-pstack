@@ -11,15 +11,20 @@ omitted from that runtime's distribution.
 | `architect` | `adapted` | `adapted` | `adapted` | Plan, delegation, monitoring, and model roles are mapped. |
 | `arena` | `adapted` | `adapted` | `adapted` | Delegation, isolation, judging, and model roles are mapped. |
 | `automate-me` | `adapted` | `unsupported` | `unsupported` | Needs an approved runtime history source and personal skill destination. |
+| `benchmark-checklist` | `portable` | `portable` | `portable` | Measurement checks with shell tools only. |
 | `blast-radius` | `portable` | `portable` | `portable` | Repository evidence and executable checks only. |
 | `bro` | `portable` | `portable` | `portable` | Pure response transformation. |
+| `correct` | `portable` | `portable` | `portable` | Repository history, checks, and commits only. |
 | `create-verification-skill` | `adapted` | `adapted` | `adapted` | Skill destination and browser driving are mapped. |
 | `figure-it-out` | `adapted` | `adapted` | `adapted` | Plan, delegation, and skill authoring are mapped. |
 | `how` | `adapted` | `adapted` | `adapted` | Exploration, monitoring, and model roles are mapped. |
+| `in-your-own-words` | `portable` | `portable` | `portable` | Pure response transformation. |
 | `interrogate` | `adapted` | `adapted` | `adapted` | Independent reviewers and model roles are mapped. |
+| `ketchup` | `adapted` | `adapted` | `adapted` | Active conversation and visual rendering are mapped. |
 | `maintain-verification-skill` | `adapted` | `adapted` | `adapted` | Skill location, delegation, and live driving are mapped. |
 | `make-bot-ui` | `adapted` | `unsupported` | `unsupported` | Needs Cursor routines, secret cards, and webhook semantics. |
 | `no-comments` | `adapted` | `adapted` | `adapted` | Uses independent policy-review delegation: a registered Comment Sicko agent where the runtime registers agents, otherwise an inert packaged reference. |
+| `poteto-help` | `adapted` | `unsupported` | `unsupported` | Documents Cursor install, Custom Modes, and `setup-pstack`; other runtimes use their own guides. |
 | `poteto-mode` | `adapted` | `adapted` | `adapted` | Runtime capabilities and unsupported routes are gated. |
 | `principle-boundary-discipline` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-attack-the-premise` | `portable` | `portable` | `portable` | Platform-neutral principle. |
@@ -27,6 +32,7 @@ omitted from that runtime's distribution.
 | `principle-encode-lessons-in-structure` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-exhaust-the-design-space` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-experience-first` | `portable` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-explain-the-number` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-fix-root-causes` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-foundational-thinking` | `portable` | `portable` | `portable` | Platform-neutral principle. |
 | `principle-guard-the-context-window` | `portable` | `portable` | `portable` | Platform-neutral principle. |
@@ -47,6 +53,7 @@ omitted from that runtime's distribution.
 | `recall` | `adapted` | `adapted` | `adapted` | Task history, delegation, and model roles are mapped. |
 | `reflect` | `adapted` | `adapted` | `adapted` | Active conversation, delegation, and skill authoring are mapped. |
 | `setup-pstack` | `adapted` | `unsupported` | `unsupported` | Cursor `.mdc` model rules are ignored; other runtimes use their own model controls. |
+| `sharpen` | `portable` | `portable` | `portable` | Pure task framing. |
 | `show-me-your-work` | `adapted` | `adapted` | `adapted` | Active conversation and independent review are mapped. |
 | `swarm` | `adapted` | `adapted` | `adapted` | Delegation, isolation, monitoring, and model roles are mapped. |
 | `sync-upstream` | `adapted` | `adapted` | `adapted` | Selective fork maintenance uses the shared source and each target's generator and validator. |
