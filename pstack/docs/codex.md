@@ -141,5 +141,4 @@ For every upstream pstack sync, use the [`sync-upstream`](../skills/sync-upstrea
 skill and follow the evergreen [Codex maintenance
 contract](https://github.com/florian42/codex-pstack/issues/1): review the pstack
 diff, regenerate and validate every target, reinstall, use a fresh task for the
-smoke test, and confirm the existing Cursor and [Claude Code](claude-code.md)
-packages still behave as before.
+smoke test, and confirm the existing Cursor package still behaves as before.

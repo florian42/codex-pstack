@@ -10,7 +10,7 @@ import {
   type ProgramView,
 } from "./program.ts";
 
-export type OrchestrateProfile = "codex-local-session" | "claude-local-session";
+export type OrchestrateProfile = "codex-local-session";
 
 export interface JournalMetadata {
   readonly schema: 1;
@@ -36,7 +36,7 @@ export interface InitializeJournalInput {
 }
 
 export function isProfile(value: string): value is OrchestrateProfile {
-  return value === "codex-local-session" || value === "claude-local-session";
+  return value === "codex-local-session";
 }
 
 /** The cap a profile uses when `--max-code-dispatches` is not supplied. */

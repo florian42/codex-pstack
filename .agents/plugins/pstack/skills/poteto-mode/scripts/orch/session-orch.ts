@@ -63,17 +63,14 @@ function operand(args: Arguments, index: number, label: string): string {
 function profileFlag(args: Arguments): OrchestrateProfile {
   const value = optionalFlag(args, "--profile") ?? "codex-local-session";
   if (!isProfile(value)) {
-    throw new Error(
-      "--profile supports only codex-local-session or claude-local-session",
-    );
+    throw new Error("--profile supports only codex-local-session");
   }
   return value;
 }
 
 /**
  * How many code units may hold a dispatch at once. `codex-local-session` keeps
- * the single-writer rule; `claude-local-session` is unbounded unless the
- * coordinator caps it explicitly.
+ * the single-writer rule.
  */
 function maxCodeDispatchesFlag(args: Arguments, profile: OrchestrateProfile): number {
   const value = optionalFlag(args, "--max-code-dispatches");

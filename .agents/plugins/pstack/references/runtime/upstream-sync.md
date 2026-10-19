@@ -14,6 +14,16 @@ content state, not a claim that the fork has the same Git history as
 | Last reviewed on | `2026-09-24` |
 | Next observed parent tip | `12d587dfb20741cafc376c42c696c5f6e2a64487` |
 
+## Claude Code target
+
+On `2026-10-19` this fork dropped its own Claude Code package
+(`plugins/claude-code/pstack`, the `pstack-claude` marketplace, and the
+`claude-local-session` Orchestrate profile). Upstream now publishes an official
+Claude Code package from `harness/pstack/claude-code` (`182f2ce`, `a968159`,
+`1b80080`, `019a6a2`), installed with `pstack@cursor-plugins`. Future syncs skip
+upstream's `harness/` tree and its generator; this fork builds only the Codex
+target.
+
 ## Last selection
 
 The range after `c1c0a32802223f4be824112dd83d33ad29a8b26c` through

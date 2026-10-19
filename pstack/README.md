@@ -28,7 +28,12 @@ follow the [Codex installation guide](./docs/codex.md#install-from-github).
 
 ### claude code
 
-follow the [Claude Code installation guide](./docs/claude-code.md#install-from-github).
+use the official Claude Code package from upstream; this fork no longer builds one:
+
+```bash
+claude plugin marketplace add cursor/plugins
+claude plugin install pstack@cursor-plugins
+```
 
 ## get started
 
@@ -52,16 +57,6 @@ pstack:poteto-mode investigate how this repository validates changes. Do not edi
 ```
 
 the [Codex quick start](./docs/codex.md#start-with-poteto-mode) has the full first-use path.
-
-### claude code
-
-open a repository you want to inspect, then start a fresh session after installation. invoke `/pstack:poteto-mode` with a goal and a result it can check:
-
-```text
-/pstack:poteto-mode investigate how this repository validates changes. Do not edit anything. Show the files, commands, and evidence behind the answer.
-```
-
-the [Claude Code quick start](./docs/claude-code.md#start-with-poteto-mode) has the full first-use path, and [Use pstack with Claude Code](./docs/claude-code.md#know-the-claude-code-boundary) has the compact boundary.
 
 this repository builds the Codex package from the same canonical skill source. it omits Cursor model rules, registered Cursor agents, Benny automations, and unsupported skills. `no-comments` is the adapted exception: it packages an inert reference to the canonical Comment Sicko policy for one independent scoped comment-only review; the parent validates that diff before accepting it. unsupported Poteto Mode routes remain as explicit stop pages. see [Use pstack with Codex](./docs/codex.md#know-the-codex-boundary) for the compact boundary and [Active skill portability](./references/runtime/skill-portability.md) for the authoritative record.
 
@@ -168,7 +163,7 @@ the full rules and playbooks live in [`skills/poteto-mode/SKILL.md`](./skills/po
 | [`/show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
 | [`/maintain-verification-skill`](./skills/maintain-verification-skill/SKILL.md) | your verify skill's feature map has drifted from the app. source wave + one live pass, at most one PR of proven corrections. |
-| [`/sync-upstream`](./skills/sync-upstream/SKILL.md) | selectively port upstream pstack changes, regenerate Codex and Claude Code packages, and record the reviewed boundary. |
+| [`/sync-upstream`](./skills/sync-upstream/SKILL.md) | selectively port upstream pstack changes, regenerate the Codex package, and record the reviewed boundary. |
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |

@@ -8,7 +8,6 @@ import { vocabularyNames } from "./vocabulary.mjs";
 /** target name -> build config path, relative to the repository root. */
 export const TARGET_REGISTRY = {
   codex: ".agents/plugins/pstack-build.json",
-  "claude-code": "plugins/claude-code/pstack-build.json",
 };
 
 export function targetNames() {

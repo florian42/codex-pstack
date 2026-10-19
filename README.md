@@ -95,9 +95,13 @@ See the [Codex installation, validation, and maintenance guide](pstack/docs/code
 
 ## Claude Code pstack
 
-This fork also packages pstack for Claude Code from the same canonical skill tree,
-with `comment-sicko` and `poteto-agent` registered as plugin agents. See the
-[Claude Code installation, validation, and maintenance guide](pstack/docs/claude-code.md).
+This fork no longer packages pstack for Claude Code. Use the official package
+from upstream instead:
+
+```bash
+claude plugin marketplace add cursor/plugins
+claude plugin install pstack@cursor-plugins
+```
 
 ## License
 

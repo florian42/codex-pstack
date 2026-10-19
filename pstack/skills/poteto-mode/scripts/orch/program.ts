@@ -36,10 +36,8 @@ export interface ProgramView {
   readonly units: ReadonlyMap<string, UnitView>;
   /**
    * How many `isolated-worktree` units may hold a dispatch at once. The
-   * `codex-local-session` profile pins this to 1; `claude-local-session`
-   * leaves it unbounded (`Number.POSITIVE_INFINITY`) or at an explicit cap,
-   * because each of its code workers gets its own worktree. It never relaxes
-   * the single integration writer, which is enforced outside the reducer.
+   * `codex-local-session` profile pins this to 1. It never relaxes the single
+   * integration writer, which is enforced outside the reducer.
    */
   readonly maxConcurrentCodeDispatches: number;
   readonly integrationHead?: string;

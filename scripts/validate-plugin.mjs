@@ -17,12 +17,11 @@ import { toPosix, walkFiles, walkFilesIfPresent } from "./lib/fs.mjs";
 import { readPortability } from "./lib/portability.mjs";
 import { isSemver, MANIFESTS, versionParityFailures } from "./lib/manifest.mjs";
 import { loadTarget, repositoryRoot, targetNames } from "./lib/targets.mjs";
-import { claudeCodeChecks } from "./lib/targets/claude-code.mjs";
 import { codexChecks } from "./lib/targets/codex.mjs";
 import { resolveVocabularies } from "./lib/vocabulary.mjs";
 
 /** Bundles of target-specific checks, selected by the config's manifestChecks. */
-const CHECK_BUNDLES = { codex: codexChecks, "claude-code": claudeCodeChecks };
+const CHECK_BUNDLES = { codex: codexChecks };
 
 /** First directory on PATH holding an executable named `command`, or null. */
 function resolveExecutable(command) {

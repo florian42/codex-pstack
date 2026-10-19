@@ -6,56 +6,56 @@ classification per runtime target. `portable` needs no runtime-sensitive edit.
 contract. `unsupported` contains an explicit stop gate for that runtime and is
 omitted from that runtime's distribution.
 
-| Skill | Cursor | Codex | Claude Code | Boundary |
-|---|---|---|---|---|
-| `architect` | `adapted` | `adapted` | `adapted` | Plan, delegation, monitoring, and model roles are mapped. |
-| `arena` | `adapted` | `adapted` | `adapted` | Delegation, isolation, judging, and model roles are mapped. |
-| `automate-me` | `adapted` | `unsupported` | `unsupported` | Needs an approved runtime history source and personal skill destination. |
-| `blast-radius` | `portable` | `portable` | `portable` | Repository evidence and executable checks only. |
-| `bro` | `portable` | `portable` | `portable` | Pure response transformation. |
-| `create-verification-skill` | `adapted` | `adapted` | `adapted` | Skill destination and browser driving are mapped. |
-| `figure-it-out` | `adapted` | `adapted` | `adapted` | Plan, delegation, and skill authoring are mapped. |
-| `how` | `adapted` | `adapted` | `adapted` | Exploration, monitoring, and model roles are mapped. |
-| `interrogate` | `adapted` | `adapted` | `adapted` | Independent reviewers and model roles are mapped. |
-| `maintain-verification-skill` | `adapted` | `adapted` | `adapted` | Skill location, delegation, and live driving are mapped. |
-| `make-bot-ui` | `adapted` | `unsupported` | `unsupported` | Needs Cursor routines, secret cards, and webhook semantics. |
-| `no-comments` | `adapted` | `adapted` | `adapted` | Uses independent policy-review delegation: a registered Comment Sicko agent where the runtime registers agents, otherwise an inert packaged reference. |
-| `poteto-mode` | `adapted` | `adapted` | `adapted` | Runtime capabilities and unsupported routes are gated. |
-| `principle-boundary-discipline` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-attack-the-premise` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-build-the-lever` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-encode-lessons-in-structure` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-exhaust-the-design-space` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-experience-first` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-fix-root-causes` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-foundational-thinking` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-guard-the-context-window` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-laziness-protocol` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-make-operations-idempotent` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-migrate-callers-then-delete-legacy-apis` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-minimize-reader-load` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-model-the-domain` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-never-block-on-the-human` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-outcome-oriented-execution` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-prove-it-works` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-redesign-from-first-principles` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-separate-before-serializing-shared-state` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-sequence-verifiable-units` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-test-behavior-not-implementation` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-subtract-before-you-add` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `principle-type-system-discipline` | `portable` | `portable` | `portable` | Platform-neutral principle. |
-| `recall` | `adapted` | `adapted` | `adapted` | Task history, delegation, and model roles are mapped. |
-| `reflect` | `adapted` | `adapted` | `adapted` | Active conversation, delegation, and skill authoring are mapped. |
-| `setup-pstack` | `adapted` | `unsupported` | `unsupported` | Cursor `.mdc` model rules are ignored; other runtimes use their own model controls. |
-| `show-me-your-work` | `adapted` | `adapted` | `adapted` | Active conversation and independent review are mapped. |
-| `swarm` | `adapted` | `adapted` | `adapted` | Delegation, isolation, monitoring, and model roles are mapped. |
-| `sync-upstream` | `adapted` | `adapted` | `adapted` | Selective fork maintenance uses the shared source and each target's generator and validator. |
-| `tdd` | `portable` | `portable` | `portable` | Repository tests and executable checks only. |
-| `teach` | `portable` | `portable` | `portable` | Composes shared skills and inherits their gates. |
-| `technical-writing` | `portable` | `portable` | `portable` | Platform-neutral writing guidance. |
-| `typescript-best-practices` | `portable` | `portable` | `portable` | Platform-neutral language guidance. |
-| `unslop` | `portable` | `portable` | `portable` | Pure prose transformation. |
-| `why` | `adapted` | `adapted` | `adapted` | Evidence discovery, delegation, and model roles are mapped. |
+| Skill | Cursor | Codex | Boundary |
+|---|---|---|---|
+| `architect` | `adapted` | `adapted` | Plan, delegation, monitoring, and model roles are mapped. |
+| `arena` | `adapted` | `adapted` | Delegation, isolation, judging, and model roles are mapped. |
+| `automate-me` | `adapted` | `unsupported` | Needs an approved runtime history source and personal skill destination. |
+| `blast-radius` | `portable` | `portable` | Repository evidence and executable checks only. |
+| `bro` | `portable` | `portable` | Pure response transformation. |
+| `create-verification-skill` | `adapted` | `adapted` | Skill destination and browser driving are mapped. |
+| `figure-it-out` | `adapted` | `adapted` | Plan, delegation, and skill authoring are mapped. |
+| `how` | `adapted` | `adapted` | Exploration, monitoring, and model roles are mapped. |
+| `interrogate` | `adapted` | `adapted` | Independent reviewers and model roles are mapped. |
+| `maintain-verification-skill` | `adapted` | `adapted` | Skill location, delegation, and live driving are mapped. |
+| `make-bot-ui` | `adapted` | `unsupported` | Needs Cursor routines, secret cards, and webhook semantics. |
+| `no-comments` | `adapted` | `adapted` | Uses independent policy-review delegation: a registered Comment Sicko agent where the runtime registers agents, otherwise an inert packaged reference. |
+| `poteto-mode` | `adapted` | `adapted` | Runtime capabilities and unsupported routes are gated. |
+| `principle-boundary-discipline` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-attack-the-premise` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-build-the-lever` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-encode-lessons-in-structure` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-exhaust-the-design-space` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-experience-first` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-fix-root-causes` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-foundational-thinking` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-guard-the-context-window` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-laziness-protocol` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-make-operations-idempotent` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-migrate-callers-then-delete-legacy-apis` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-minimize-reader-load` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-model-the-domain` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-never-block-on-the-human` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-outcome-oriented-execution` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-prove-it-works` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-redesign-from-first-principles` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-separate-before-serializing-shared-state` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-sequence-verifiable-units` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-test-behavior-not-implementation` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-subtract-before-you-add` | `portable` | `portable` | Platform-neutral principle. |
+| `principle-type-system-discipline` | `portable` | `portable` | Platform-neutral principle. |
+| `recall` | `adapted` | `adapted` | Task history, delegation, and model roles are mapped. |
+| `reflect` | `adapted` | `adapted` | Active conversation, delegation, and skill authoring are mapped. |
+| `setup-pstack` | `adapted` | `unsupported` | Cursor `.mdc` model rules are ignored; other runtimes use their own model controls. |
+| `show-me-your-work` | `adapted` | `adapted` | Active conversation and independent review are mapped. |
+| `swarm` | `adapted` | `adapted` | Delegation, isolation, monitoring, and model roles are mapped. |
+| `sync-upstream` | `adapted` | `adapted` | Selective fork maintenance uses the shared source and each target's generator and validator. |
+| `tdd` | `portable` | `portable` | Repository tests and executable checks only. |
+| `teach` | `portable` | `portable` | Composes shared skills and inherits their gates. |
+| `technical-writing` | `portable` | `portable` | Platform-neutral writing guidance. |
+| `typescript-best-practices` | `portable` | `portable` | Platform-neutral language guidance. |
+| `unslop` | `portable` | `portable` | Pure prose transformation. |
+| `why` | `adapted` | `adapted` | Evidence discovery, delegation, and model roles are mapped. |
 
 ## Unsupported Poteto Mode routes by runtime
 
@@ -77,18 +77,6 @@ threads and delegate rollouts through the Codex mapping's task-history rows.
 `orchestrate` is supported through the `codex-local-session` profile. It ships
 only its Bun SQLite runtime and uses explicit worktrees, exact commit evidence,
 one integration writer, and conservative restart recovery.
-
-### Claude Code
-
-`autopilot-full`, `autopilot-stack`, and `shipping` depend on Graphite stack
-delivery. Those three are the only unsupported routes. `session-pickup` and
-`eval` read prior sessions and delegate transcripts through the Claude Code
-mapping's task-history rows. `babysit` is supported through the
-packaged `watch-pr` utility plus `/loop`, `worktree-cleanup` through the
-packaged worktree audit script whose `--transcripts` argument is optional, and
-`multi-phase-plan` through the packaged plan checker. `autonomous-run` is
-supported through `/loop`, and `orchestrate` through the
-`claude-local-session` profile.
 
 Packaged source may still contain excluded agents, automations, and utility files
 for Cursor. No runtime mapping, supported skill, or generated playbook may invoke

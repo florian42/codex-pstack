@@ -1,12 +1,10 @@
 # Runtime compatibility contract
 
-`pstack/skills/` is the canonical instruction tree for Cursor, Codex, and Claude Code. Shared
-skills describe work as capabilities. The runtime-specific references map those
+`pstack/skills/` is the canonical instruction tree for Cursor and Codex. Shared skills describe work as capabilities. The runtime-specific references map those
 capabilities to real platform operations:
 
 - [Cursor mapping](cursor.md)
 - [Codex mapping](codex.md)
-- [Claude Code mapping](claude-code.md)
 - [Active skill portability](skill-portability.md)
 
 ## Resolution rule

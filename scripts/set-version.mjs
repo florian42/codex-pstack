@@ -4,9 +4,8 @@
  * Rewrite the `version` field of every plugin manifest to the given semantic
  * version.
  *
- * The three manifests do not share an indentation style — the Cursor manifest
- * is tab-indented and the Codex and Claude Code manifests are two-space — and
- * one of them is upstream-owned, so this edits the raw text of the version line
+ * The manifests do not share an indentation style — the Cursor manifest is
+ * tab-indented and the Codex manifest is two-space — and one of them is upstream-owned, so this edits the raw text of the version line
  * instead of reserializing. Indentation, key order, and the trailing newline
  * are untouched.
  */
@@ -62,7 +61,7 @@ function main(argv) {
   }
   console.log(`Set version ${version} in ${changed.length} manifest(s):`);
   for (const line of changed) console.log(`  ${line}`);
-  console.log("Regenerate every distribution and commit the result: node scripts/generate-plugin.mjs --target codex && node scripts/generate-plugin.mjs --target claude-code");
+  console.log("Regenerate every distribution and commit the result: node scripts/generate-plugin.mjs --target codex");
   return 0;
 }
 

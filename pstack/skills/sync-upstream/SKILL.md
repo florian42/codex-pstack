@@ -25,7 +25,6 @@ This fork is intentionally not a full mirror of its parent. Review the upstream 
 
    ```bash
    node scripts/generate-plugin.mjs --target codex
-   node scripts/generate-plugin.mjs --target claude-code
    ```
 
 6. Validate generation, manifests, portability, and target compatibility:
